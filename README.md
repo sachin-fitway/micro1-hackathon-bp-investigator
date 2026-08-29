@@ -112,6 +112,19 @@ Holdout cases were **never used for prompt or gate tuning**. The regression demo
 
 Forensic write-ups: `results/holdout_forensic_analysis.md`, `results/step_attribution_analysis.md`
 
+## Setup
+
+**Python version:** Tested with **Python 3.14.5**. Requires **Python 3.11+** (matches `requirements.txt` dependencies).
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+cp .env.example .env               # then set OPENROUTER_API_KEY
+```
+
+Verify: `python --version` should report **3.14.5** (or your chosen 3.11+ interpreter) and `pytest tests/ -q` should pass.
+
 ## LLM Provider
 
 The live demo and evaluation runners use **OpenRouter** with **`google/gemini-2.5-flash`**.
@@ -131,6 +144,17 @@ OPENROUTER_API_KEY=your_key
 OPENROUTER_MODEL=google/gemini-2.5-flash
 MAX_OUTPUT_TOKENS=2048
 ```
+
+### Rough API cost estimate
+
+Approximate only — actual spend depends on prompt size per case, parse retries, and [OpenRouter / provider pricing](https://openrouter.ai/google/gemini-2.5-flash) at run time. Figures below use the committed config (`LLM_PROVIDER=openrouter`, `OPENROUTER_MODEL=google/gemini-2.5-flash`, `MAX_OUTPUT_TOKENS=2048`) and the repo’s `estimateTokens` heuristic (`len(text) // 4`) for inputs. Output sizing for `case_01` is taken from local trajectory JSON payloads (`trajectories/case_01_stage3.jsonl`, `case_01_stagepost_mortem.jsonl`). USD uses OpenRouter’s **listed** Gemini 2.5 Flash rates (**$0.30 / 1M input**, **$2.50 / 1M output**) as of submission — not measured billing.
+
+| Scenario | LLM calls | Input tokens (est.) | Output tokens (est.) | Rough USD |
+|----------|-----------|---------------------|----------------------|-----------|
+| **Single demo investigation** (Stage 3 + post-mortem, e.g. Case 01 in UI/CLI) | **4** (baseline, rule checker, adjudication, post-mortem) | **~5,700** | **~2,200** (~557/call from Case 01 trajectories) | **~$0.01** |
+| **Full 15-case Stage 3 evaluation** (`python run_eval.py --stage 3`) | **47** (recorded in `results/eval_submission.json` `config.llm_calls`; includes parse retries — nominal 3 calls/case) | **~80,000** (sum of built prompts across 15 cases) | **~26,000** (47 × ~557/call, scaled from Case 01) | **~$0.09** |
+
+Upper bound if every call hit the configured output cap (`2048` tokens × call count): **~$0.27** for the 15-case Stage 3 run. Re-running evaluation may differ slightly in call count and tokens.
 
 ## Demo — Web UI
 
@@ -169,6 +193,8 @@ Example post-mortems: `reports/case_{01,11,14,15}_post_mortem.md`
 JSON artifacts: `reports/artifacts/case_*_post_mortem.json`
 
 ## Reproduction & Inspection
+
+Use **Python 3.14.5** (tested) or **3.11+** with a fresh virtualenv (`pip install -r requirements.txt`).
 
 ### Run the UI
 
