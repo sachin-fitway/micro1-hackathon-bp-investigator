@@ -1,0 +1,146 @@
+{
+  "case_id": "case_07",
+  "process_context": {
+    "process_name": "fintech_payout",
+    "expected_sequence": [
+      "balance_check",
+      "compliance_hold",
+      "payout_execute",
+      "receipt_emit"
+    ]
+  },
+  "raw_logs": [
+    {
+      "log_id": "c07-01",
+      "timestamp": "2026-03-12T16:00:00Z",
+      "service": "wallet-service",
+      "message": "Balance check passed",
+      "metadata": {
+        "correlation_id": "txn-3322"
+      }
+    },
+    {
+      "log_id": "c07-02",
+      "timestamp": "2026-03-12T16:00:01Z",
+      "service": "compliance-engine",
+      "message": "Payout released",
+      "metadata": {
+        "correlation_id": "txn-3322",
+        "hold_status": "active"
+      }
+    },
+    {
+      "log_id": "c07-03",
+      "timestamp": "2026-03-12T16:00:02Z",
+      "service": "payout-service",
+      "message": "Execution blocked by active hold",
+      "metadata": {
+        "correlation_id": "txn-3322"
+      }
+    },
+    {
+      "log_id": "c07-04",
+      "timestamp": "2026-03-12T16:00:03Z",
+      "service": "support-bot",
+      "message": "Merchant says payout never arrived",
+      "metadata": {
+        "correlation_id": "txn-3322"
+      }
+    },
+    {
+      "log_id": "c07-05",
+      "timestamp": "2026-03-12T16:00:01Z",
+      "service": "audit-service",
+      "message": "Hold flag still set in ledger",
+      "metadata": {
+        "correlation_id": "txn-3322"
+      }
+    },
+    {
+      "log_id": "c07-06",
+      "timestamp": "2026-03-12T16:00:02Z",
+      "service": "receipt-service",
+      "message": "Receipt not generated",
+      "metadata": {
+        "correlation_id": "txn-3322"
+      }
+    },
+    {
+      "log_id": "c07-07",
+      "timestamp": "2026-03-12T16:00:00Z",
+      "service": "edge-gateway",
+      "message": "Payout request accepted",
+      "metadata": {
+        "correlation_id": "txn-3322"
+      }
+    },
+    {
+      "log_id": "c07-08",
+      "timestamp": "2026-03-12T16:00:03Z",
+      "service": "risk-service",
+      "message": "Merchant risk score nominal",
+      "metadata": {
+        "correlation_id": "txn-3322"
+      }
+    },
+    {
+      "log_id": "c07-n01",
+      "timestamp": "2026-03-12T16:00:00Z",
+      "service": "metrics-service",
+      "message": "Metric batch flushed",
+      "metadata": {
+        "correlation_id": "txn-3322",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c07-n02",
+      "timestamp": "2026-03-12T16:00:03Z",
+      "service": "cache-service",
+      "message": "Cache partition warmed",
+      "metadata": {
+        "correlation_id": "txn-3322",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c07-n03",
+      "timestamp": "2026-03-12T16:00:06Z",
+      "service": "cdn-service",
+      "message": "Edge POP health check ok",
+      "metadata": {
+        "correlation_id": "txn-3322",
+        "irrelevant": true
+      }
+    }
+  ],
+  "ground_truth": {
+    "divergence_step": "compliance_hold",
+    "root_cause_category": "metadata_message_conflict",
+    "culprit_log_ids": [
+      "c07-02",
+      "c07-05"
+    ],
+    "required_evidence_ids": [
+      "c07-02",
+      "c07-05",
+      "c07-03"
+    ],
+    "decoy_diagnosis": null,
+    "acceptable_root_causes": []
+  },
+  "meta": {
+    "failure_pattern": "metadata_message_conflict",
+    "difficulty": "standard",
+    "baseline_hypothesis": "baseline",
+    "domain": "fintech",
+    "difficulty_factors": {
+      "log_noise": 1,
+      "causal_distance": 1,
+      "competing_hypotheses": 1,
+      "evidence_dispersion": 1,
+      "metadata_conflict": 3,
+      "temporal_ambiguity": 0
+    }
+  }
+}

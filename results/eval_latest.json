@@ -1,0 +1,425 @@
+{
+  "config": {
+    "provider": "openrouter",
+    "model": "google/gemini-2.5-flash",
+    "max_output_tokens": 2048,
+    "llm_calls": 47,
+    "status": "complete",
+    "completed_stages": [
+      3
+    ]
+  },
+  "stage_means_iqs": {
+    "3": 89.72777777777777
+  },
+  "cases": {
+    "case_01": {
+      "stage_3": {
+        "iqs": 99.99999999999999,
+        "score_breakdown": {
+          "failure_point": 1.0,
+          "root_cause": 1.0,
+          "evidence_recall": 1.0,
+          "evidence_precision": 1.0,
+          "no_fabricated": 1.0,
+          "total": 0.9999999999999999
+        },
+        "prediction": {
+          "divergence_step": "inventory_reserve",
+          "root_cause_category": "sequence_skip",
+          "culprit_log_ids": [
+            "c01-02"
+          ],
+          "evidence_log_ids": [
+            "c01-02",
+            "c01-03"
+          ],
+          "explanation": "The 'inventory_reserve' step was explicitly skipped due to a 'legacy fast-path enabled' configuration, as indicated by log c01-02. This skip directly led to the 'payment_authorize' step failing because there was 'no active reservation', as seen in log c01-03. The process diverged at the inventory reservation step because a required action was bypassed, causing a downstream failure."
+        }
+      }
+    },
+    "case_02": {
+      "stage_3": {
+        "iqs": 95.0,
+        "score_breakdown": {
+          "failure_point": 1.0,
+          "root_cause": 1.0,
+          "evidence_recall": 1.0,
+          "evidence_precision": 0.5,
+          "no_fabricated": 1.0,
+          "total": 0.95
+        },
+        "prediction": {
+          "divergence_step": "order_confirm",
+          "root_cause_category": "sequence_skip",
+          "culprit_log_ids": [
+            "c02-07",
+            "c02-08"
+          ],
+          "evidence_log_ids": [
+            "c02-01",
+            "c02-03",
+            "c02-04",
+            "c02-06",
+            "c02-07",
+            "c02-08"
+          ],
+          "explanation": "The 'order_confirm' step was invoked without the necessary authorization token, as indicated by log 'c02-07'. This suggests that the system proceeded to the confirmation step despite the 'payment_authorize' step not having fully completed or its output (the authorization token) not being correctly passed or validated. Although 'Authorization succeeded' (c02-06) was logged, the subsequent confirmation step's failure to receive or validate this authorization indicates a bypass or skip in the required sequence enforcement. The 'Order confirmation missing prior authorization' log (c02-08) further confirms this divergence."
+        }
+      }
+    },
+    "case_03": {
+      "stage_3": {
+        "iqs": 95.99999999999999,
+        "score_breakdown": {
+          "failure_point": 1.0,
+          "root_cause": 1.0,
+          "evidence_recall": 1.0,
+          "evidence_precision": 0.6,
+          "no_fabricated": 1.0,
+          "total": 0.9599999999999999
+        },
+        "prediction": {
+          "divergence_step": "coupon_apply",
+          "root_cause_category": "sequence_skip",
+          "culprit_log_ids": [
+            "c03-02"
+          ],
+          "evidence_log_ids": [
+            "c03-02",
+            "c03-05",
+            "c03-03",
+            "c03-06",
+            "c03-09"
+          ],
+          "explanation": "The 'coupon_apply' step was effectively skipped or deferred, as indicated by log c03-02 'Coupon evaluation deferred'. This led to the coupon not being applied, which is confirmed by c03-05 'Coupon step produced no discount artifact'. Consequently, the payment authorization (c03-03) was attempted with a 'stale amount' (likely pre-discount), and the customer was 'charged wrong amount' (c03-06). The tax service also computed tax on the 'pre-discount amount' (c03-09), further supporting that the coupon application did not complete as expected."
+        }
+      }
+    },
+    "case_04": {
+      "stage_3": {
+        "iqs": 80.0,
+        "score_breakdown": {
+          "failure_point": 1.0,
+          "root_cause": 0.5,
+          "evidence_recall": 0.6666666666666666,
+          "evidence_precision": 1.0,
+          "no_fabricated": 1.0,
+          "total": 0.7999999999999999
+        },
+        "prediction": {
+          "divergence_step": "coupon_apply",
+          "root_cause_category": "false_success_signal",
+          "culprit_log_ids": [
+            "c04-03"
+          ],
+          "evidence_log_ids": [
+            "c04-03",
+            "c04-04"
+          ],
+          "explanation": "The 'coupon_apply' step reported a message 'Coupon rejected silently: campaign expired' with metadata 'coupon_status: ignored'. This indicates that the coupon was not applied, but the process continued as if it had been handled without halting or signaling a critical error. This silent rejection led to a 'price mismatch' in the subsequent 'payment_authorize' step, as the expected discounted price was not used. The coupon service effectively signaled a 'success' in processing the coupon, but the actual outcome was a failure to apply it, leading to downstream issues."
+        }
+      }
+    },
+    "case_05": {
+      "stage_3": {
+        "iqs": 95.99999999999999,
+        "score_breakdown": {
+          "failure_point": 1.0,
+          "root_cause": 1.0,
+          "evidence_recall": 1.0,
+          "evidence_precision": 0.6,
+          "no_fabricated": 1.0,
+          "total": 0.9599999999999999
+        },
+        "prediction": {
+          "divergence_step": "payment_capture",
+          "root_cause_category": "sequence_skip",
+          "culprit_log_ids": [
+            "c05-01"
+          ],
+          "evidence_log_ids": [
+            "c05-01",
+            "c05-06",
+            "c05-02",
+            "c05-03",
+            "c05-04"
+          ],
+          "explanation": "The 'payment_capture' step was explicitly skipped because authorization was still pending, as indicated by log c05-01. Despite this critical step being skipped, the process continued to subsequent steps like 'warehouse_pick' (c05-02) and 'carrier_label' (c05-03). The audit service also confirmed no capture receipt was found (c05-06), further proving the payment capture did not occur. This silent skipping of a prerequisite step led to a downstream failure where dispatch timed out waiting for settlement (c05-04), which was a direct consequence of the payment not being captured."
+        }
+      }
+    },
+    "case_06": {
+      "stage_3": {
+        "iqs": 99.99999999999999,
+        "score_breakdown": {
+          "failure_point": 1.0,
+          "root_cause": 1.0,
+          "evidence_recall": 1.0,
+          "evidence_precision": 1.0,
+          "no_fabricated": 1.0,
+          "total": 0.9999999999999999
+        },
+        "prediction": {
+          "divergence_step": "compliance_screen",
+          "root_cause_category": "sequence_skip",
+          "culprit_log_ids": [
+            "c06-02"
+          ],
+          "evidence_log_ids": [
+            "c06-02",
+            "c06-06",
+            "c06-03"
+          ],
+          "explanation": "The 'compliance_screen' step was explicitly bypassed as indicated by log c06-02, which states 'Screening queue bypassed for trusted corridor'. This bypass led to the absence of a required compliance token, as confirmed by log c06-06 ('No compliance artifact attached'). Consequently, the 'ledger_post' step failed because of the missing compliance token (log c06-03), indicating that the process continued despite a critical step being skipped."
+        }
+      }
+    },
+    "case_07": {
+      "stage_3": {
+        "iqs": 99.99999999999999,
+        "score_breakdown": {
+          "failure_point": 1.0,
+          "root_cause": 1.0,
+          "evidence_recall": 1.0,
+          "evidence_precision": 1.0,
+          "no_fabricated": 1.0,
+          "total": 0.9999999999999999
+        },
+        "prediction": {
+          "divergence_step": "compliance_hold",
+          "root_cause_category": "metadata_message_conflict",
+          "culprit_log_ids": [
+            "c07-02"
+          ],
+          "evidence_log_ids": [
+            "c07-02",
+            "c07-05",
+            "c07-03"
+          ],
+          "explanation": "The 'compliance_hold' step reported 'Payout released' (c07-02) but its metadata explicitly stated 'hold_status': 'active'. This internal contradiction led to the payout-service being blocked (c07-03) because the hold was, in fact, still active as confirmed by the audit service (c07-05). The message indicated success, but the underlying state and metadata showed failure."
+        }
+      }
+    },
+    "case_08": {
+      "stage_3": {
+        "iqs": 85.0,
+        "score_breakdown": {
+          "failure_point": 1.0,
+          "root_cause": 0.5,
+          "evidence_recall": 1.0,
+          "evidence_precision": 1.0,
+          "no_fabricated": 1.0,
+          "total": 0.85
+        },
+        "prediction": {
+          "divergence_step": "aml_screening",
+          "root_cause_category": "false_success_signal",
+          "culprit_log_ids": [
+            "c08-02"
+          ],
+          "evidence_log_ids": [
+            "c08-02",
+            "c08-06",
+            "c08-03"
+          ],
+          "explanation": "The 'aml_screening' step reported 'Screening short-circuited' (c08-02), which implies a bypass or early exit. However, the audit service explicitly logged 'No AML clearance token issued' (c08-06), indicating that the required output of the AML screening (a clearance token) was not produced. This constitutes a 'false_success_signal' because the process continued as if AML was handled, but the necessary clearance was not obtained, leading to the 'settlement_batch' step waiting for clearance (c08-03)."
+        }
+      }
+    },
+    "case_09": {
+      "stage_3": {
+        "iqs": 78.75,
+        "score_breakdown": {
+          "failure_point": 1.0,
+          "root_cause": 0.5,
+          "evidence_recall": 1.0,
+          "evidence_precision": 0.375,
+          "no_fabricated": 1.0,
+          "total": 0.7875
+        },
+        "prediction": {
+          "divergence_step": "fraud_score",
+          "root_cause_category": "duplicate_processing",
+          "culprit_log_ids": [
+            "c09-03"
+          ],
+          "evidence_log_ids": [
+            "c09-01",
+            "c09-02",
+            "c09-03",
+            "c09-07",
+            "c09-04",
+            "c09-08",
+            "c09-05",
+            "c09-06"
+          ],
+          "explanation": "The 'auth_request' step completed normally (c09-01). The 'fraud_score' step initially completed (c09-02), but immediately after, a duplicate fraud score event was consumed (c09-03). This duplicate processing of the fraud score event led to 'conflicting risk signals' at the issuer (c09-04) and the issuer reporting a 'duplicate authorization request' (c09-08). The audit service also noted 'Two fraud events within 50ms' (c09-07), confirming the duplicate processing. This duplicate processing at the fraud scoring stage caused the subsequent 'issuer_approve' step to fail due to conflicting signals, and consequently, the 'ledger_hold' was not created (c09-05). The customer also observed a 'duplicate charge attempt' (c09-06), which is a symptom of the underlying duplicate processing."
+        }
+      }
+    },
+    "case_10": {
+      "stage_3": {
+        "iqs": 99.99999999999999,
+        "score_breakdown": {
+          "failure_point": 1.0,
+          "root_cause": 1.0,
+          "evidence_recall": 1.0,
+          "evidence_precision": 1.0,
+          "no_fabricated": 1.0,
+          "total": 0.9999999999999999
+        },
+        "prediction": {
+          "divergence_step": "kyc_verify",
+          "root_cause_category": "sequence_skip",
+          "culprit_log_ids": [
+            "c10-01"
+          ],
+          "evidence_log_ids": [
+            "c10-01",
+            "c10-03",
+            "c10-06"
+          ],
+          "explanation": "The 'kyc_verify' step was explicitly bypassed as indicated by log 'c10-01'. This bypass led to the absence of a required KYC token ('c10-06'), which subsequently caused the 'webhook_dispatch' step to defer and eventually timeout ('c10-03', 'c10-04') because it was 'pending KYC token'. The initial bypass of KYC verification is the earliest divergence from the expected sequence."
+        }
+      }
+    },
+    "case_11": {
+      "stage_3": {
+        "iqs": 66.0,
+        "score_breakdown": {
+          "failure_point": 1.0,
+          "root_cause": 0.0,
+          "evidence_recall": 1.0,
+          "evidence_precision": 0.6,
+          "no_fabricated": 1.0,
+          "total": 0.66
+        },
+        "prediction": {
+          "divergence_step": "seat_allocate",
+          "root_cause_category": "config_drift",
+          "culprit_log_ids": [
+            "c11-03",
+            "c11-04"
+          ],
+          "evidence_log_ids": [
+            "c11-03",
+            "c11-04",
+            "c11-05",
+            "c11-06",
+            "c11-07"
+          ],
+          "explanation": "The billing service marked the billing profile as pending (c11-03), which subsequently led the audit service to mark the tenant inactive (c11-04). This inactive flag then caused the seat allocation to be skipped (c11-05) and the welcome email to not be triggered (c11-06), ultimately preventing the customer from logging in (c11-07). The root cause appears to be an issue with the billing profile preventing the tenant from being active."
+        }
+      }
+    },
+    "case_12": {
+      "stage_3": {
+        "iqs": 82.5,
+        "score_breakdown": {
+          "failure_point": 1.0,
+          "root_cause": 0.5,
+          "evidence_recall": 1.0,
+          "evidence_precision": 0.75,
+          "no_fabricated": 1.0,
+          "total": 0.8250000000000001
+        },
+        "prediction": {
+          "divergence_step": "sso_callback",
+          "root_cause_category": "false_success_signal",
+          "culprit_log_ids": [
+            "c12-01"
+          ],
+          "evidence_log_ids": [
+            "c12-01",
+            "c12-06",
+            "c12-02",
+            "c12-11"
+          ],
+          "explanation": "The 'sso_callback' step silently failed to persist the session, as indicated by log 'c12-01' stating 'Callback not persisted: session store write failed silently' and 'c12-06' confirming 'No callback receipt stored'. Despite this, the process continued, leading to 'identity_map' using a 'cached stale subject' (c12-02) and a 'Subject hash differs from callback token' (c12-11), indicating the initial SSO callback was not properly processed or stored, but the system proceeded as if it had been successful."
+        }
+      }
+    },
+    "case_13": {
+      "stage_3": {
+        "iqs": 99.99999999999999,
+        "score_breakdown": {
+          "failure_point": 1.0,
+          "root_cause": 1.0,
+          "evidence_recall": 1.0,
+          "evidence_precision": 1.0,
+          "no_fabricated": 1.0,
+          "total": 0.9999999999999999
+        },
+        "prediction": {
+          "divergence_step": "billing_attach",
+          "root_cause_category": "sequence_skip",
+          "culprit_log_ids": [
+            "c13-03"
+          ],
+          "evidence_log_ids": [
+            "c13-03",
+            "c13-06",
+            "c13-04"
+          ],
+          "explanation": "The 'billing_attach' step was explicitly skipped as indicated by log c13-03, 'Payment method attach skipped'. This led to a 'No billing token recorded' (c13-06) and subsequently caused the 'feature_unlock' step to be rejected due to a 'billing profile missing' (c13-04). The process continued despite the critical billing step being bypassed."
+        }
+      }
+    },
+    "case_14": {
+      "stage_3": {
+        "iqs": 85.0,
+        "score_breakdown": {
+          "failure_point": 1.0,
+          "root_cause": 0.5,
+          "evidence_recall": 1.0,
+          "evidence_precision": 1.0,
+          "no_fabricated": 1.0,
+          "total": 0.85
+        },
+        "prediction": {
+          "divergence_step": "usage_aggregate",
+          "root_cause_category": "false_success_signal",
+          "culprit_log_ids": [
+            "c14-02"
+          ],
+          "evidence_log_ids": [
+            "c14-02",
+            "c14-05",
+            "c14-06"
+          ],
+          "explanation": "The 'usage_aggregate' step reported 'Aggregation complete' (c14-02), which is a success signal. However, its metadata explicitly states 'billing_state': 'skipped', indicating that the aggregation did not actually complete as expected for billing purposes. This is further supported by the audit log 'Aggregation used stale window' (c14-06), which explains why the aggregation was effectively skipped or incorrect. The downstream symptom 'Customer billed wrong amount' (c14-05) confirms that the incorrect aggregation led to a business impact."
+        }
+      }
+    },
+    "case_15": {
+      "stage_3": {
+        "iqs": 81.66666666666667,
+        "score_breakdown": {
+          "failure_point": 1.0,
+          "root_cause": 0.5,
+          "evidence_recall": 1.0,
+          "evidence_precision": 0.6666666666666666,
+          "no_fabricated": 1.0,
+          "total": 0.8166666666666667
+        },
+        "prediction": {
+          "divergence_step": "entitlement_sync",
+          "root_cause_category": "webhook_missing",
+          "culprit_log_ids": [
+            "c15-06"
+          ],
+          "evidence_log_ids": [
+            "c15-01",
+            "c15-06",
+            "c15-02",
+            "c15-03",
+            "c15-04",
+            "c15-15"
+          ],
+          "explanation": "The 'contract_signed' step completed successfully (c15-01). However, the 'entitlement_sync' step failed to properly process the contract event, as indicated by 'c15-06' stating 'Contract event not observed by entitlement service'. This led to an 'Entitlement hash mismatch' (c15-02) because the entitlement service was working with an outdated state. Despite this, the 'tenant_provision' step reported 'complete' but with a 'deferred' state (c15-03), which is a false success signal for the overall process. Consequently, 'seat_activate' was skipped because 'entitlement not ready' (c15-04), and the license count remained unchanged (c15-15). The root cause is the missing webhook or event delivery from the contract service to the entitlement service, preventing the entitlement state from being correctly updated."
+        }
+      }
+    }
+  }
+}

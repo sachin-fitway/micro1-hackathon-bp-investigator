@@ -1,0 +1,114 @@
+{
+  "case_id": "case_15",
+  "investigation_stage": 3,
+  "diagnosis": {
+    "divergence_step": "entitlement_sync",
+    "root_cause_category": "webhook_missing",
+    "culprit_log_ids": [
+      "c15-06"
+    ],
+    "evidence_log_ids": [
+      "c15-01",
+      "c15-06",
+      "c15-02",
+      "c15-03",
+      "c15-04",
+      "c15-15"
+    ],
+    "explanation": "The 'contract_signed' step completed successfully (c15-01). However, the 'entitlement_sync' step failed to properly process the contract event, as indicated by 'c15-06' stating 'Contract event not observed by entitlement service'. This led to an 'Entitlement hash mismatch' (c15-02) because the entitlement service was working with an outdated state. Despite this, the 'tenant_provision' step reported 'complete' but with a 'deferred' state (c15-03), which is a false success signal for the overall process. Consequently, 'seat_activate' was skipped because 'entitlement not ready' (c15-04), and the license count remained unchanged (c15-15). The root cause is the missing webhook or event delivery from the contract service to the entitlement service, preventing the entitlement state from being correctly updated."
+  },
+  "retrieved_evidence_log_ids": [
+    "c15-01",
+    "c15-06",
+    "c15-02",
+    "c15-03",
+    "c15-04",
+    "c15-15"
+  ],
+  "retrieved_culprit_log_ids": [
+    "c15-06",
+    "c15-01",
+    "c15-02",
+    "c15-03",
+    "c15-04",
+    "c15-15"
+  ],
+  "unknown_log_ids": [],
+  "claim_traces": [
+    {
+      "claim": "Process diverged at step 'entitlement_sync'",
+      "supporting_log_ids": [
+        "c15-06"
+      ],
+      "source": "diagnosis"
+    },
+    {
+      "claim": "Root cause category is 'webhook_missing'",
+      "supporting_log_ids": [
+        "c15-01",
+        "c15-06",
+        "c15-02",
+        "c15-03",
+        "c15-04",
+        "c15-15"
+      ],
+      "source": "diagnosis"
+    },
+    {
+      "claim": "Diagnostic explanation: The 'contract_signed' step completed successfully (c15-01). However, the 'entitlement_sync' step failed to properly process the contract event, as indicated by 'c15-06' stating 'Contract event not observed by entitlement service'. This led to an 'Entitlement hash mismatch' (c15-02) because the entitlement service was working with an outdated state. Despite this, the 'tenant_provision' step reported 'complete' but with a 'deferred' state (c15-03), which is a false success signal for the overall process. Consequently, 'seat_activate' was skipped because 'entitlement not ready' (c15-04), and the license count remained unchanged (c15-15). The root cause is the missing webhook or event delivery from the contract service to the entitlement service, preventing the entitlement state from being correctly updated.",
+      "supporting_log_ids": [
+        "c15-01",
+        "c15-06",
+        "c15-02",
+        "c15-03",
+        "c15-04",
+        "c15-15"
+      ],
+      "source": "diagnosis"
+    },
+    {
+      "claim": "Culprit anchor \u2014 audit-service: Contract event not observed by entitlement service",
+      "supporting_log_ids": [
+        "c15-06"
+      ],
+      "source": "diagnosis"
+    },
+    {
+      "claim": "Supporting evidence \u2014 contract-service: Contract signed for tenant T-4421",
+      "supporting_log_ids": [
+        "c15-01"
+      ],
+      "source": "diagnosis"
+    },
+    {
+      "claim": "Supporting evidence \u2014 entitlement-service: Entitlement hash mismatch: expected v3, cache v2",
+      "supporting_log_ids": [
+        "c15-02"
+      ],
+      "source": "diagnosis"
+    },
+    {
+      "claim": "Supporting evidence \u2014 provision-worker: Tenant provisioning complete for tenant T-4421",
+      "supporting_log_ids": [
+        "c15-03"
+      ],
+      "source": "diagnosis"
+    },
+    {
+      "claim": "Supporting evidence \u2014 seat-service: Seat activation skipped: entitlement not ready",
+      "supporting_log_ids": [
+        "c15-04"
+      ],
+      "source": "diagnosis"
+    },
+    {
+      "claim": "Supporting evidence \u2014 license-service: License count unchanged",
+      "supporting_log_ids": [
+        "c15-15"
+      ],
+      "source": "diagnosis"
+    }
+  ],
+  "evidence_table_markdown": "## Evidence Table\n\n| Log ID | Timestamp | Service | Message | Role |\n|--------|-----------|---------|---------|------|\n| c15-01 | 2026-03-13T08:00:00Z | contract-service | Contract signed for tenant T-4421 | evidence |\n| c15-06 | 2026-03-13T08:00:01Z | audit-service | Contract event not observed by entitlement service | culprit + evidence |\n| c15-02 | 2026-03-13T08:00:01Z | entitlement-service | Entitlement hash mismatch: expected v3, cache v2 | evidence |\n| c15-03 | 2026-03-13T08:00:02Z | provision-worker | Tenant provisioning complete for tenant T-4421 | evidence |\n| c15-04 | 2026-03-13T08:00:03Z | seat-service | Seat activation skipped: entitlement not ready | evidence |\n| c15-15 | 2026-03-13T08:00:03Z | license-service | License count unchanged | evidence |",
+  "report_path": "/Users/sachinrai/StudioProjects/micro1-hackathon-bp-investigator/reports/case_15_post_mortem.md"
+}

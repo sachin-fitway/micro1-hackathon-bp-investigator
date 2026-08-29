@@ -1,0 +1,149 @@
+{
+  "case_id": "case_16",
+  "process_context": {
+    "process_name": "healthcare_prior_auth",
+    "expected_sequence": [
+      "referral_intake",
+      "coverage_verify",
+      "prior_auth_submit",
+      "care_schedule"
+    ]
+  },
+  "raw_logs": [
+    {
+      "log_id": "c16-01",
+      "timestamp": "2026-04-02T09:00:00Z",
+      "service": "referral-gateway",
+      "message": "Referral accepted",
+      "metadata": {
+        "correlation_id": "pa-4401"
+      }
+    },
+    {
+      "log_id": "c16-02",
+      "timestamp": "2026-04-02T09:00:01Z",
+      "service": "coverage-service",
+      "message": "Coverage verified",
+      "metadata": {
+        "correlation_id": "pa-4401",
+        "plan_tier": "basic",
+        "required_tier": "specialist"
+      }
+    },
+    {
+      "log_id": "c16-03",
+      "timestamp": "2026-04-02T09:00:02Z",
+      "service": "auth-service",
+      "message": "Prior auth submission blocked: plan insufficient",
+      "metadata": {
+        "correlation_id": "pa-4401"
+      }
+    },
+    {
+      "log_id": "c16-04",
+      "timestamp": "2026-04-02T09:00:03Z",
+      "service": "scheduling-service",
+      "message": "Appointment slot held without auth",
+      "metadata": {
+        "correlation_id": "pa-4401"
+      }
+    },
+    {
+      "log_id": "c16-05",
+      "timestamp": "2026-04-02T09:00:04Z",
+      "service": "support-portal",
+      "message": "Patient told authorization pending",
+      "metadata": {
+        "correlation_id": "pa-4401"
+      }
+    },
+    {
+      "log_id": "c16-06",
+      "timestamp": "2026-04-02T09:00:01Z",
+      "service": "audit-service",
+      "message": "Member plan tier basic; referral requires specialist",
+      "metadata": {
+        "correlation_id": "pa-4401",
+        "level": "DEBUG"
+      }
+    },
+    {
+      "log_id": "c16-07",
+      "timestamp": "2026-04-02T09:00:02Z",
+      "service": "fhir-adapter",
+      "message": "Coverage snapshot cached from yesterday",
+      "metadata": {
+        "correlation_id": "pa-4401"
+      }
+    },
+    {
+      "log_id": "c16-n01",
+      "timestamp": "2026-03-12T09:00:00Z",
+      "service": "metrics-service",
+      "message": "Metric batch flushed",
+      "metadata": {
+        "correlation_id": "pa-4401",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c16-n02",
+      "timestamp": "2026-03-12T09:00:03Z",
+      "service": "cache-service",
+      "message": "Cache partition warmed",
+      "metadata": {
+        "correlation_id": "pa-4401",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c16-n03",
+      "timestamp": "2026-03-12T09:00:06Z",
+      "service": "cdn-service",
+      "message": "Edge POP health check ok",
+      "metadata": {
+        "correlation_id": "pa-4401",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c16-n04",
+      "timestamp": "2026-03-12T09:00:09Z",
+      "service": "feature-flag-service",
+      "message": "Flag evaluation cached",
+      "metadata": {
+        "correlation_id": "pa-4401",
+        "irrelevant": true
+      }
+    }
+  ],
+  "ground_truth": {
+    "divergence_step": "coverage_verify",
+    "root_cause_category": "entitlement_mismatch",
+    "culprit_log_ids": [
+      "c16-02",
+      "c16-06"
+    ],
+    "required_evidence_ids": [
+      "c16-02",
+      "c16-06",
+      "c16-03"
+    ],
+    "decoy_diagnosis": null,
+    "acceptable_root_causes": []
+  },
+  "meta": {
+    "failure_pattern": "silent_divergence",
+    "difficulty": "hard",
+    "baseline_hypothesis": "either",
+    "domain": "b2b_saas",
+    "difficulty_factors": {
+      "log_noise": 1,
+      "causal_distance": 2,
+      "competing_hypotheses": 1,
+      "evidence_dispersion": 2,
+      "metadata_conflict": 3,
+      "temporal_ambiguity": 0
+    }
+  }
+}

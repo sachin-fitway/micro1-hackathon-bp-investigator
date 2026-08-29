@@ -1,0 +1,13 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+trajectories/
+.DS_Store
+results/*
+!results/eval_submission.json
+!results/eval_holdout.json
+!results/eval_latest.json
+!results/holdout_forensic_analysis.md
+!results/step_attribution_analysis.md

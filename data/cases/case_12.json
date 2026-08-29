@@ -1,0 +1,227 @@
+{
+  "case_id": "case_12",
+  "process_context": {
+    "process_name": "b2b_saas_sso_onboarding",
+    "expected_sequence": [
+      "sso_callback",
+      "identity_map",
+      "role_assign",
+      "workspace_grant"
+    ]
+  },
+  "raw_logs": [
+    {
+      "log_id": "c12-01",
+      "timestamp": "2026-03-12T21:00:00Z",
+      "service": "sso-gateway",
+      "message": "Callback not persisted: session store write failed silently",
+      "metadata": {
+        "correlation_id": "prov-6620"
+      }
+    },
+    {
+      "log_id": "c12-02",
+      "timestamp": "2026-03-12T21:00:01Z",
+      "service": "identity-service",
+      "message": "Mapping used cached stale subject",
+      "metadata": {
+        "correlation_id": "prov-6620"
+      }
+    },
+    {
+      "log_id": "c12-03",
+      "timestamp": "2026-03-12T21:00:02Z",
+      "service": "role-service",
+      "message": "Role assignment attempted",
+      "metadata": {
+        "correlation_id": "prov-6620"
+      }
+    },
+    {
+      "log_id": "c12-04",
+      "timestamp": "2026-03-12T21:00:05Z",
+      "service": "workspace-service",
+      "message": "Grant API timeout",
+      "metadata": {
+        "correlation_id": "prov-6620",
+        "level": "ERROR"
+      }
+    },
+    {
+      "log_id": "c12-05",
+      "timestamp": "2026-03-12T21:00:06Z",
+      "service": "support-bot",
+      "message": "User sees empty workspace",
+      "metadata": {
+        "correlation_id": "prov-6620"
+      }
+    },
+    {
+      "log_id": "c12-06",
+      "timestamp": "2026-03-12T21:00:00Z",
+      "service": "audit-service",
+      "message": "No callback receipt stored",
+      "metadata": {
+        "correlation_id": "prov-6620",
+        "level": "DEBUG"
+      }
+    },
+    {
+      "log_id": "c12-07",
+      "timestamp": "2026-03-12T21:00:03Z",
+      "service": "notification-service",
+      "message": "Onboarding email sent prematurely",
+      "metadata": {
+        "correlation_id": "prov-6620"
+      }
+    },
+    {
+      "log_id": "c12-08",
+      "timestamp": "2026-03-12T21:00:04Z",
+      "service": "directory-service",
+      "message": "Directory sync reports user exists",
+      "metadata": {
+        "correlation_id": "prov-6620"
+      }
+    },
+    {
+      "log_id": "c12-09",
+      "timestamp": "2026-03-12T21:00:01Z",
+      "service": "edge-gateway",
+      "message": "SSO flow started",
+      "metadata": {
+        "correlation_id": "prov-6620"
+      }
+    },
+    {
+      "log_id": "c12-10",
+      "timestamp": "2026-03-12T21:00:05Z",
+      "service": "ops-bot",
+      "message": "Auto-retry on workspace grant",
+      "metadata": {
+        "correlation_id": "prov-6620"
+      }
+    },
+    {
+      "log_id": "c12-11",
+      "timestamp": "2026-03-12T21:00:02Z",
+      "service": "identity-service",
+      "message": "Subject hash differs from callback token",
+      "metadata": {
+        "correlation_id": "prov-6620",
+        "level": "DEBUG"
+      }
+    },
+    {
+      "log_id": "c12-12",
+      "timestamp": "2026-03-12T21:00:03Z",
+      "service": "workspace-service",
+      "message": "Workspace API latency spike",
+      "metadata": {
+        "correlation_id": "prov-6620"
+      }
+    },
+    {
+      "log_id": "c12-n01",
+      "timestamp": "2026-03-12T21:00:00Z",
+      "service": "metrics-service",
+      "message": "Metric batch flushed",
+      "metadata": {
+        "correlation_id": "prov-6620",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c12-n02",
+      "timestamp": "2026-03-12T21:00:03Z",
+      "service": "cache-service",
+      "message": "Cache partition warmed",
+      "metadata": {
+        "correlation_id": "prov-6620",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c12-n03",
+      "timestamp": "2026-03-12T21:00:06Z",
+      "service": "cdn-service",
+      "message": "Edge POP health check ok",
+      "metadata": {
+        "correlation_id": "prov-6620",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c12-n04",
+      "timestamp": "2026-03-12T21:00:09Z",
+      "service": "feature-flag-service",
+      "message": "Flag evaluation cached",
+      "metadata": {
+        "correlation_id": "prov-6620",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c12-n05",
+      "timestamp": "2026-03-12T21:00:12Z",
+      "service": "session-service",
+      "message": "Session TTL refreshed",
+      "metadata": {
+        "correlation_id": "prov-6620",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c12-n06",
+      "timestamp": "2026-03-12T21:00:15Z",
+      "service": "rate-limiter",
+      "message": "Token bucket replenished",
+      "metadata": {
+        "correlation_id": "prov-6620",
+        "irrelevant": true
+      }
+    }
+  ],
+  "ground_truth": {
+    "divergence_step": "sso_callback",
+    "root_cause_category": "sequence_skip",
+    "culprit_log_ids": [
+      "c12-01",
+      "c12-06"
+    ],
+    "required_evidence_ids": [
+      "c12-01",
+      "c12-06",
+      "c12-11"
+    ],
+    "decoy_diagnosis": {
+      "decoy_type": "upstream_silent_downstream_cascade",
+      "divergence_step": "workspace_grant",
+      "root_cause_category": "timeout_stall",
+      "culprit_log_ids": [
+        "c12-04"
+      ],
+      "decoy_evidence_ids": [
+        "c12-04",
+        "c12-05",
+        "c12-12",
+        "c12-10"
+      ]
+    },
+    "acceptable_root_causes": []
+  },
+  "meta": {
+    "failure_pattern": "decoy_diagnosis",
+    "difficulty": "hard",
+    "baseline_hypothesis": "agent",
+    "domain": "b2b_saas",
+    "difficulty_factors": {
+      "log_noise": 2,
+      "causal_distance": 3,
+      "competing_hypotheses": 2,
+      "evidence_dispersion": 3,
+      "metadata_conflict": 1,
+      "temporal_ambiguity": 1
+    }
+  }
+}

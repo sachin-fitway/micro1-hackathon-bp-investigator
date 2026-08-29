@@ -1,0 +1,156 @@
+{
+  "case_id": "case_18",
+  "process_context": {
+    "process_name": "insurance_claim_payment",
+    "expected_sequence": [
+      "claim_intake",
+      "policy_validate",
+      "adjuster_assign",
+      "payment_release"
+    ]
+  },
+  "raw_logs": [
+    {
+      "log_id": "c18-01",
+      "timestamp": "2026-04-02T11:00:00Z",
+      "service": "claims-intake",
+      "message": "Claim opened",
+      "metadata": {
+        "correlation_id": "clm-9912"
+      }
+    },
+    {
+      "log_id": "c18-02",
+      "timestamp": "2026-04-02T11:00:01Z",
+      "service": "policy-service",
+      "message": "Policy active for member",
+      "metadata": {
+        "correlation_id": "clm-9912"
+      }
+    },
+    {
+      "log_id": "c18-03",
+      "timestamp": "2026-04-02T11:00:02Z",
+      "service": "adjuster-queue",
+      "message": "Assignment created",
+      "metadata": {
+        "correlation_id": "clm-9912"
+      }
+    },
+    {
+      "log_id": "c18-04",
+      "timestamp": "2026-04-02T11:00:02Z",
+      "service": "adjuster-queue",
+      "message": "Duplicate assignment event replayed",
+      "metadata": {
+        "correlation_id": "clm-9912"
+      }
+    },
+    {
+      "log_id": "c18-05",
+      "timestamp": "2026-04-02T11:00:03Z",
+      "service": "payment-service",
+      "message": "Release blocked: conflicting adjuster locks",
+      "metadata": {
+        "correlation_id": "clm-9912"
+      }
+    },
+    {
+      "log_id": "c18-06",
+      "timestamp": "2026-04-02T11:00:04Z",
+      "service": "support-bot",
+      "message": "Claim payment delayed",
+      "metadata": {
+        "correlation_id": "clm-9912"
+      }
+    },
+    {
+      "log_id": "c18-07",
+      "timestamp": "2026-04-02T11:00:03Z",
+      "service": "audit-service",
+      "message": "Two assignment IDs for same claim within 40ms",
+      "metadata": {
+        "correlation_id": "clm-9912"
+      }
+    },
+    {
+      "log_id": "c18-08",
+      "timestamp": "2026-04-02T11:00:04Z",
+      "service": "bank-gateway",
+      "message": "ACH reject: duplicate beneficiary reference",
+      "metadata": {
+        "correlation_id": "clm-9912"
+      }
+    },
+    {
+      "log_id": "c18-n01",
+      "timestamp": "2026-03-12T11:00:00Z",
+      "service": "metrics-service",
+      "message": "Metric batch flushed",
+      "metadata": {
+        "correlation_id": "clm-9912",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c18-n02",
+      "timestamp": "2026-03-12T11:00:03Z",
+      "service": "cache-service",
+      "message": "Cache partition warmed",
+      "metadata": {
+        "correlation_id": "clm-9912",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c18-n03",
+      "timestamp": "2026-03-12T11:00:06Z",
+      "service": "cdn-service",
+      "message": "Edge POP health check ok",
+      "metadata": {
+        "correlation_id": "clm-9912",
+        "irrelevant": true
+      }
+    }
+  ],
+  "ground_truth": {
+    "divergence_step": "adjuster_assign",
+    "root_cause_category": "duplicate_processing",
+    "culprit_log_ids": [
+      "c18-04",
+      "c18-07"
+    ],
+    "required_evidence_ids": [
+      "c18-04",
+      "c18-07",
+      "c18-05"
+    ],
+    "decoy_diagnosis": {
+      "decoy_type": "duplicate_false_diagnosis",
+      "divergence_step": "payment_release",
+      "root_cause_category": "duplicate_processing",
+      "culprit_log_ids": [
+        "c18-08"
+      ],
+      "decoy_evidence_ids": [
+        "c18-08",
+        "c18-06"
+      ]
+    },
+    "acceptable_root_causes": []
+  },
+  "meta": {
+    "failure_pattern": "decoy_diagnosis",
+    "difficulty": "standard",
+    "baseline_hypothesis": "either",
+    "domain": "fintech",
+    "difficulty_factors": {
+      "log_noise": 1,
+      "causal_distance": 2,
+      "competing_hypotheses": 2,
+      "evidence_dispersion": 2,
+      "metadata_conflict": 0,
+      "temporal_ambiguity": 1
+    }
+  }
+}

@@ -1,0 +1,450 @@
+{
+  "config": {
+    "provider": "openrouter",
+    "model": "google/gemini-2.5-flash",
+    "max_output_tokens": 2048,
+    "llm_calls": 32,
+    "status": "complete",
+    "completed_stages": [
+      0,
+      3
+    ],
+    "dataset": "holdout",
+    "case_ids": [
+      "case_16",
+      "case_17",
+      "case_18",
+      "case_19",
+      "case_20",
+      "case_21",
+      "case_22",
+      "case_23"
+    ]
+  },
+  "stage_means_iqs": {
+    "0": 78.56249999999999,
+    "3": 74.8125
+  },
+  "cases": {
+    "case_16": {
+      "stage_0": {
+        "iqs": 64.99999999999999,
+        "score_breakdown": {
+          "failure_point": 0.0,
+          "root_cause": 1.0,
+          "evidence_recall": 1.0,
+          "evidence_precision": 1.0,
+          "no_fabricated": 1.0,
+          "total": 0.6499999999999999
+        },
+        "prediction": {
+          "divergence_step": "prior_auth_submit",
+          "root_cause_category": "entitlement_mismatch",
+          "culprit_log_ids": [
+            "c16-03"
+          ],
+          "evidence_log_ids": [
+            "c16-02",
+            "c16-03",
+            "c16-06"
+          ],
+          "explanation": "The 'prior_auth_submit' step failed because the patient's coverage plan tier ('basic') did not meet the required tier ('specialist') for the referral. This entitlement mismatch prevented the prior authorization from being submitted, as indicated by log c16-03. The 'coverage_verify' step (c16-02) correctly identified the plan tiers, and the audit service (c16-06) confirmed the mismatch. Despite this, the process continued to 'care_schedule' (c16-04) which held an appointment without the necessary authorization, indicating a silent failure where the process did not halt or escalate appropriately after the prior auth submission was blocked."
+        }
+      },
+      "stage_3": {
+        "iqs": 64.99999999999999,
+        "score_breakdown": {
+          "failure_point": 0.0,
+          "root_cause": 1.0,
+          "evidence_recall": 1.0,
+          "evidence_precision": 1.0,
+          "no_fabricated": 1.0,
+          "total": 0.6499999999999999
+        },
+        "prediction": {
+          "divergence_step": "prior_auth_submit",
+          "root_cause_category": "entitlement_mismatch",
+          "culprit_log_ids": [
+            "c16-03"
+          ],
+          "evidence_log_ids": [
+            "c16-02",
+            "c16-03",
+            "c16-06"
+          ],
+          "explanation": "The 'prior_auth_submit' step failed because the patient's coverage plan tier ('basic') did not meet the required tier ('specialist') for the referral. This entitlement mismatch prevented the prior authorization from being submitted, as indicated by log c16-03. The 'coverage_verify' step (c16-02) correctly identified the plan tiers, and the audit service (c16-06) confirmed the mismatch. Despite this, the process continued to 'care_schedule' (c16-04) which held an appointment without the necessary authorization, indicating a silent failure where the process did not halt or escalate appropriately after the prior auth submission was blocked."
+        }
+      }
+    },
+    "case_17": {
+      "stage_0": {
+        "iqs": 54.99999999999999,
+        "score_breakdown": {
+          "failure_point": 0.0,
+          "root_cause": 1.0,
+          "evidence_recall": 0.6666666666666666,
+          "evidence_precision": 0.5,
+          "no_fabricated": 1.0,
+          "total": 0.5499999999999999
+        },
+        "prediction": {
+          "divergence_step": "last_mile_dispatch",
+          "root_cause_category": "webhook_missing",
+          "culprit_log_ids": [
+            "c17-04",
+            "c17-07"
+          ],
+          "evidence_log_ids": [
+            "c17-04",
+            "c17-07",
+            "c17-05",
+            "c17-08"
+          ],
+          "explanation": "The 'last_mile_dispatch' step failed because a critical 'carrier handoff webhook' was not received. Log c17-04 explicitly states 'No carrier handoff webhook received', and log c17-07 confirms the consequence: 'Route not created: missing handoff event'. This missing event prevented the dispatch process from initiating correctly, leading to a timeout when attempting to call the carrier API (c17-05) and the shipment being stuck (c17-06). Log c17-08 indicates that the partner hub's webhook endpoint was only responding to health checks, implying no actual event data was processed or sent."
+        }
+      },
+      "stage_3": {
+        "iqs": 54.99999999999999,
+        "score_breakdown": {
+          "failure_point": 0.0,
+          "root_cause": 1.0,
+          "evidence_recall": 0.6666666666666666,
+          "evidence_precision": 0.5,
+          "no_fabricated": 1.0,
+          "total": 0.5499999999999999
+        },
+        "prediction": {
+          "divergence_step": "last_mile_dispatch",
+          "root_cause_category": "webhook_missing",
+          "culprit_log_ids": [
+            "c17-04",
+            "c17-07"
+          ],
+          "evidence_log_ids": [
+            "c17-04",
+            "c17-07",
+            "c17-05",
+            "c17-08"
+          ],
+          "explanation": "The 'last_mile_dispatch' step failed because a critical 'carrier handoff webhook' was not received. Log c17-04 explicitly states 'No carrier handoff webhook received', and log c17-07 confirms the consequence: 'Route not created: missing handoff event'. This missing event prevented the dispatch process from initiating correctly, leading to a timeout when attempting to call the carrier API (c17-05) and the shipment being stuck (c17-06). Log c17-08 indicates that the partner hub's webhook endpoint was only responding to health checks, implying no actual event data was processed or sent."
+        }
+      }
+    },
+    "case_18": {
+      "stage_0": {
+        "iqs": 95.99999999999999,
+        "score_breakdown": {
+          "failure_point": 1.0,
+          "root_cause": 1.0,
+          "evidence_recall": 1.0,
+          "evidence_precision": 0.6,
+          "no_fabricated": 1.0,
+          "total": 0.9599999999999999
+        },
+        "prediction": {
+          "divergence_step": "adjuster_assign",
+          "root_cause_category": "duplicate_processing",
+          "culprit_log_ids": [
+            "c18-03",
+            "c18-04"
+          ],
+          "evidence_log_ids": [
+            "c18-03",
+            "c18-04",
+            "c18-07",
+            "c18-05",
+            "c18-08"
+          ],
+          "explanation": "The 'adjuster_assign' step experienced duplicate processing. Log c18-03 indicates an assignment was created, but immediately after, log c18-04 shows a 'Duplicate assignment event replayed'. This led to two assignment IDs for the same claim, as confirmed by audit-service log c18-07. This duplicate assignment created 'conflicting adjuster locks' (c18-05), preventing the 'payment_release' step and ultimately causing an 'ACH reject: duplicate beneficiary reference' (c18-08) due to the underlying issue of multiple assignments for a single claim."
+        }
+      },
+      "stage_3": {
+        "iqs": 95.99999999999999,
+        "score_breakdown": {
+          "failure_point": 1.0,
+          "root_cause": 1.0,
+          "evidence_recall": 1.0,
+          "evidence_precision": 0.6,
+          "no_fabricated": 1.0,
+          "total": 0.9599999999999999
+        },
+        "prediction": {
+          "divergence_step": "adjuster_assign",
+          "root_cause_category": "duplicate_processing",
+          "culprit_log_ids": [
+            "c18-03",
+            "c18-04"
+          ],
+          "evidence_log_ids": [
+            "c18-03",
+            "c18-04",
+            "c18-07",
+            "c18-05",
+            "c18-08"
+          ],
+          "explanation": "The 'adjuster_assign' step experienced duplicate processing. Log c18-03 indicates an assignment was created, but immediately after, log c18-04 shows a 'Duplicate assignment event replayed'. This led to two assignment IDs for the same claim, as confirmed by audit-service log c18-07. This duplicate assignment created 'conflicting adjuster locks' (c18-05), preventing the 'payment_release' step and ultimately causing an 'ACH reject: duplicate beneficiary reference' (c18-08) due to the underlying issue of multiple assignments for a single claim."
+        }
+      }
+    },
+    "case_19": {
+      "stage_0": {
+        "iqs": 97.5,
+        "score_breakdown": {
+          "failure_point": 1.0,
+          "root_cause": 1.0,
+          "evidence_recall": 1.0,
+          "evidence_precision": 0.75,
+          "no_fabricated": 1.0,
+          "total": 0.975
+        },
+        "prediction": {
+          "divergence_step": "recipe_load",
+          "root_cause_category": "config_drift",
+          "culprit_log_ids": [
+            "c19-02",
+            "c19-06"
+          ],
+          "evidence_log_ids": [
+            "c19-02",
+            "c19-06",
+            "c19-03",
+            "c19-04"
+          ],
+          "explanation": "The 'recipe_load' step diverged from expected behavior because an incorrect recipe version (v7) was loaded instead of the required version (v9). This is indicated by log c19-02. Log c19-06, 'Plant default recipe map stale', provides the root cause for this divergence, suggesting a configuration issue where the system is using an outdated recipe map. This configuration drift led to the subsequent 'mix_execute' step producing a product with wrong viscosity (c19-03) and ultimately failing QC (c19-04)."
+        }
+      },
+      "stage_3": {
+        "iqs": 97.5,
+        "score_breakdown": {
+          "failure_point": 1.0,
+          "root_cause": 1.0,
+          "evidence_recall": 1.0,
+          "evidence_precision": 0.75,
+          "no_fabricated": 1.0,
+          "total": 0.975
+        },
+        "prediction": {
+          "divergence_step": "recipe_load",
+          "root_cause_category": "config_drift",
+          "culprit_log_ids": [
+            "c19-02",
+            "c19-06"
+          ],
+          "evidence_log_ids": [
+            "c19-02",
+            "c19-06",
+            "c19-03",
+            "c19-04"
+          ],
+          "explanation": "The 'recipe_load' step diverged from expected behavior because an incorrect recipe version (v7) was loaded instead of the required version (v9). This is indicated by log c19-02. Log c19-06, 'Plant default recipe map stale', provides the root cause for this divergence, suggesting a configuration issue where the system is using an outdated recipe map. This configuration drift led to the subsequent 'mix_execute' step producing a product with wrong viscosity (c19-03) and ultimately failing QC (c19-04)."
+        }
+      }
+    },
+    "case_20": {
+      "stage_0": {
+        "iqs": 99.99999999999999,
+        "score_breakdown": {
+          "failure_point": 1.0,
+          "root_cause": 1.0,
+          "evidence_recall": 1.0,
+          "evidence_precision": 1.0,
+          "no_fabricated": 1.0,
+          "total": 0.9999999999999999
+        },
+        "prediction": {
+          "divergence_step": "carrier_validate",
+          "root_cause_category": "sequence_skip",
+          "culprit_log_ids": [
+            "c20-02"
+          ],
+          "evidence_log_ids": [
+            "c20-02",
+            "c20-06",
+            "c20-03"
+          ],
+          "explanation": "The 'carrier_validate' step was explicitly bypassed due to an 'expedite flag set' (log c20-02). This bypass led to the absence of a required validation token, as confirmed by the audit service (log c20-06). Consequently, the subsequent 'number_release' step failed because the 'validation token absent' (log c20-03), indicating that the skipped validation was a prerequisite for successful release."
+        }
+      },
+      "stage_3": {
+        "iqs": 70.0,
+        "score_breakdown": {
+          "failure_point": 1.0,
+          "root_cause": 0.0,
+          "evidence_recall": 1.0,
+          "evidence_precision": 1.0,
+          "no_fabricated": 1.0,
+          "total": 0.7
+        },
+        "prediction": {
+          "divergence_step": "carrier_validate",
+          "root_cause_category": "config_drift",
+          "culprit_log_ids": [
+            "c20-02"
+          ],
+          "evidence_log_ids": [
+            "c20-02",
+            "c20-06",
+            "c20-03"
+          ],
+          "explanation": "The 'carrier_validate' step was explicitly bypassed due to an 'expedite flag set' as indicated by log c20-02. This bypass, likely a configuration setting, led to the absence of a validation token, which subsequently caused the 'number_release' step to be rejected (c20-03) because 'validation token absent'. The audit log c20-06 confirms that no carrier validation artifact was stored, further supporting that the validation step was not properly executed, leading to a silent failure in the expected process flow."
+        }
+      }
+    },
+    "case_21": {
+      "stage_0": {
+        "iqs": 82.5,
+        "score_breakdown": {
+          "failure_point": 1.0,
+          "root_cause": 0.5,
+          "evidence_recall": 1.0,
+          "evidence_precision": 0.75,
+          "no_fabricated": 1.0,
+          "total": 0.8250000000000001
+        },
+        "prediction": {
+          "divergence_step": "fee_calculate",
+          "root_cause_category": "false_success_signal",
+          "culprit_log_ids": [
+            "c21-02"
+          ],
+          "evidence_log_ids": [
+            "c21-02",
+            "c21-03",
+            "c21-06",
+            "c21-07"
+          ],
+          "explanation": "The 'fee_calculate' step reported success (log c21-02) and indicated 'fee_state': 'waived', implying no seller fee was due. However, the 'seller_fee_due' metadata was 42.5, contradicting the 'waived' state. This false success signal led to the 'payout-service' blocking the payout due to an 'outstanding fee balance' (log c21-03), which was a result of the promotional waiver not being propagated (log c21-06) and taxes being computed on the full fee amount (log c21-07), indicating the waiver was not correctly applied despite the 'waived' status."
+        }
+      },
+      "stage_3": {
+        "iqs": 82.5,
+        "score_breakdown": {
+          "failure_point": 1.0,
+          "root_cause": 0.5,
+          "evidence_recall": 1.0,
+          "evidence_precision": 0.75,
+          "no_fabricated": 1.0,
+          "total": 0.8250000000000001
+        },
+        "prediction": {
+          "divergence_step": "fee_calculate",
+          "root_cause_category": "false_success_signal",
+          "culprit_log_ids": [
+            "c21-02"
+          ],
+          "evidence_log_ids": [
+            "c21-02",
+            "c21-03",
+            "c21-06",
+            "c21-07"
+          ],
+          "explanation": "The 'fee_calculate' step reported success (log c21-02) and indicated 'fee_state': 'waived', implying no seller fee was due. However, the 'seller_fee_due' metadata was 42.5, contradicting the 'waived' state. This false success signal led to the 'payout-service' blocking the payout due to an 'outstanding fee balance' (log c21-03), which was a result of the promotional waiver not being propagated (log c21-06) and taxes being computed on the full fee amount (log c21-07), indicating the waiver was not correctly applied despite the 'waived' status."
+        }
+      }
+    },
+    "case_22": {
+      "stage_0": {
+        "iqs": 99.99999999999999,
+        "score_breakdown": {
+          "failure_point": 1.0,
+          "root_cause": 1.0,
+          "evidence_recall": 1.0,
+          "evidence_precision": 1.0,
+          "no_fabricated": 1.0,
+          "total": 0.9999999999999999
+        },
+        "prediction": {
+          "divergence_step": "background_check",
+          "root_cause_category": "false_success_signal",
+          "culprit_log_ids": [
+            "c22-02"
+          ],
+          "evidence_log_ids": [
+            "c22-02",
+            "c22-06",
+            "c22-03"
+          ],
+          "explanation": "The 'background_check' step reported 'cleared' (log c22-02) but its metadata indicated 'check_status': 'pending_vendor' and 'report_ready': false. This false success signal led to the subsequent 'account_provision' step being skipped because 'clearance not verified' (log c22-03), even though the background check service had seemingly completed its task. Log c22-06 further confirms the vendor report was still queued, indicating the background check was not truly complete."
+        }
+      },
+      "stage_3": {
+        "iqs": 99.99999999999999,
+        "score_breakdown": {
+          "failure_point": 1.0,
+          "root_cause": 1.0,
+          "evidence_recall": 1.0,
+          "evidence_precision": 1.0,
+          "no_fabricated": 1.0,
+          "total": 0.9999999999999999
+        },
+        "prediction": {
+          "divergence_step": "background_check",
+          "root_cause_category": "false_success_signal",
+          "culprit_log_ids": [
+            "c22-02"
+          ],
+          "evidence_log_ids": [
+            "c22-02",
+            "c22-06",
+            "c22-03"
+          ],
+          "explanation": "The 'background_check' step reported 'Background check cleared' (c22-02), implying success. However, its metadata explicitly states 'check_status': 'pending_vendor' and 'report_ready': false. This false success signal allowed the process to proceed to 'account_provision', which then correctly identified that clearance was not verified (c22-03) and skipped account creation. Log c22-06 further confirms the vendor report was still queued, indicating the background check was not actually complete."
+        }
+      }
+    },
+    "case_23": {
+      "stage_0": {
+        "iqs": 32.5,
+        "score_breakdown": {
+          "failure_point": 0.0,
+          "root_cause": 0.0,
+          "evidence_recall": 1.0,
+          "evidence_precision": 0.75,
+          "no_fabricated": 1.0,
+          "total": 0.325
+        },
+        "prediction": {
+          "divergence_step": "dispatch_execute",
+          "root_cause_category": "race_condition",
+          "culprit_log_ids": [
+            "c23-05",
+            "c23-03"
+          ],
+          "evidence_log_ids": [
+            "c23-05",
+            "c23-03",
+            "c23-07",
+            "c23-04"
+          ],
+          "explanation": "The 'dispatch_execute' step experienced a race condition. Log c23-05 indicates that a dispatch acknowledgment was received by 'scada-bridge' at 16:00:02Z, which is before the 'dispatch-service' logged the actual 'Dispatch command issued' at 16:00:03Z (log c23-03). This out-of-order execution means the system acknowledged a dispatch before it was officially issued, leading to an invalid state. The 'meter_confirm' step (log c23-04) subsequently failed because it was 'missing dispatch token', and the 'audit-service' (log c23-07) confirmed that the 'Confirm step invoked without dispatch completion', indicating the dispatch was not properly completed despite the early acknowledgment."
+        }
+      },
+      "stage_3": {
+        "iqs": 32.5,
+        "score_breakdown": {
+          "failure_point": 0.0,
+          "root_cause": 0.0,
+          "evidence_recall": 1.0,
+          "evidence_precision": 0.75,
+          "no_fabricated": 1.0,
+          "total": 0.325
+        },
+        "prediction": {
+          "divergence_step": "dispatch_execute",
+          "root_cause_category": "race_condition",
+          "culprit_log_ids": [
+            "c23-05",
+            "c23-03"
+          ],
+          "evidence_log_ids": [
+            "c23-05",
+            "c23-03",
+            "c23-07",
+            "c23-04"
+          ],
+          "explanation": "The 'dispatch_execute' step experienced a race condition. Log c23-05 indicates that a dispatch acknowledgment was received by 'scada-bridge' at 16:00:02Z, which is before the 'dispatch-service' logged the actual 'Dispatch command issued' at 16:00:03Z (log c23-03). This out-of-order execution means the system acknowledged a dispatch before it was officially issued, leading to an invalid state. The 'meter_confirm' step (log c23-04) subsequently failed because it was 'missing dispatch token', and the 'audit-service' (log c23-07) confirmed that the 'Confirm step invoked without dispatch completion', indicating the dispatch was not properly completed despite the early acknowledgment."
+        }
+      }
+    }
+  }
+}

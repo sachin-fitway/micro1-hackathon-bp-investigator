@@ -1,0 +1,159 @@
+{
+  "case_id": "case_20",
+  "process_context": {
+    "process_name": "telecom_number_port",
+    "expected_sequence": [
+      "port_request",
+      "carrier_validate",
+      "number_release",
+      "account_link"
+    ]
+  },
+  "raw_logs": [
+    {
+      "log_id": "c20-01",
+      "timestamp": "2026-04-02T13:00:00Z",
+      "service": "port-service",
+      "message": "Port request filed",
+      "metadata": {
+        "correlation_id": "port-7733"
+      }
+    },
+    {
+      "log_id": "c20-02",
+      "timestamp": "2026-04-02T13:00:01Z",
+      "service": "carrier-gateway",
+      "message": "Validation bypassed: expedite flag set",
+      "metadata": {
+        "correlation_id": "port-7733"
+      }
+    },
+    {
+      "log_id": "c20-03",
+      "timestamp": "2026-04-02T13:00:02Z",
+      "service": "number-registry",
+      "message": "Release rejected: validation token absent",
+      "metadata": {
+        "correlation_id": "port-7733"
+      }
+    },
+    {
+      "log_id": "c20-04",
+      "timestamp": "2026-04-02T13:00:05Z",
+      "service": "carrier-gateway",
+      "message": "Release polling timeout",
+      "metadata": {
+        "correlation_id": "port-7733",
+        "level": "ERROR"
+      }
+    },
+    {
+      "log_id": "c20-05",
+      "timestamp": "2026-04-02T13:00:06Z",
+      "service": "support-bot",
+      "message": "Number port failed",
+      "metadata": {
+        "correlation_id": "port-7733"
+      }
+    },
+    {
+      "log_id": "c20-06",
+      "timestamp": "2026-04-02T13:00:01Z",
+      "service": "audit-service",
+      "message": "No carrier validation artifact stored",
+      "metadata": {
+        "correlation_id": "port-7733",
+        "level": "DEBUG"
+      }
+    },
+    {
+      "log_id": "c20-07",
+      "timestamp": "2026-04-02T13:00:03Z",
+      "service": "account-service",
+      "message": "Account link deferred",
+      "metadata": {
+        "correlation_id": "port-7733"
+      }
+    },
+    {
+      "log_id": "c20-n01",
+      "timestamp": "2026-03-12T13:00:00Z",
+      "service": "metrics-service",
+      "message": "Metric batch flushed",
+      "metadata": {
+        "correlation_id": "port-7733",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c20-n02",
+      "timestamp": "2026-03-12T13:00:03Z",
+      "service": "cache-service",
+      "message": "Cache partition warmed",
+      "metadata": {
+        "correlation_id": "port-7733",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c20-n03",
+      "timestamp": "2026-03-12T13:00:06Z",
+      "service": "cdn-service",
+      "message": "Edge POP health check ok",
+      "metadata": {
+        "correlation_id": "port-7733",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c20-n04",
+      "timestamp": "2026-03-12T13:00:09Z",
+      "service": "feature-flag-service",
+      "message": "Flag evaluation cached",
+      "metadata": {
+        "correlation_id": "port-7733",
+        "irrelevant": true
+      }
+    }
+  ],
+  "ground_truth": {
+    "divergence_step": "carrier_validate",
+    "root_cause_category": "sequence_skip",
+    "culprit_log_ids": [
+      "c20-02",
+      "c20-06"
+    ],
+    "required_evidence_ids": [
+      "c20-02",
+      "c20-06",
+      "c20-03"
+    ],
+    "decoy_diagnosis": {
+      "decoy_type": "downstream_error_looks_like_root",
+      "divergence_step": "number_release",
+      "root_cause_category": "timeout_stall",
+      "culprit_log_ids": [
+        "c20-04"
+      ],
+      "decoy_evidence_ids": [
+        "c20-04",
+        "c20-05"
+      ]
+    },
+    "acceptable_root_causes": []
+  },
+  "meta": {
+    "failure_pattern": "decoy_diagnosis",
+    "difficulty": "hard",
+    "baseline_hypothesis": "agent",
+    "domain": "fintech",
+    "difficulty_factors": {
+      "log_noise": 2,
+      "causal_distance": 2,
+      "competing_hypotheses": 2,
+      "evidence_dispersion": 2,
+      "metadata_conflict": 0,
+      "temporal_ambiguity": 1
+    }
+  }
+}

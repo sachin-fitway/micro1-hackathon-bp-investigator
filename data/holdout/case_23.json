@@ -1,0 +1,177 @@
+{
+  "case_id": "case_23",
+  "process_context": {
+    "process_name": "energy_grid_dispatch",
+    "expected_sequence": [
+      "demand_forecast",
+      "unit_commit",
+      "dispatch_execute",
+      "meter_confirm"
+    ]
+  },
+  "raw_logs": [
+    {
+      "log_id": "c23-01",
+      "timestamp": "2026-04-02T16:00:00Z",
+      "service": "forecast-service",
+      "message": "Demand forecast published",
+      "metadata": {
+        "correlation_id": "grid-1188"
+      }
+    },
+    {
+      "log_id": "c23-02",
+      "timestamp": "2026-04-02T16:00:01Z",
+      "service": "commit-service",
+      "message": "Unit commitment submitted",
+      "metadata": {
+        "correlation_id": "grid-1188"
+      }
+    },
+    {
+      "log_id": "c23-04",
+      "timestamp": "2026-04-02T16:00:04Z",
+      "service": "meter-service",
+      "message": "Meter confirmation missing dispatch token",
+      "metadata": {
+        "correlation_id": "grid-1188"
+      }
+    },
+    {
+      "log_id": "c23-03",
+      "timestamp": "2026-04-02T16:00:03Z",
+      "service": "dispatch-service",
+      "message": "Dispatch command issued",
+      "metadata": {
+        "correlation_id": "grid-1188"
+      }
+    },
+    {
+      "log_id": "c23-05",
+      "timestamp": "2026-04-02T16:00:02Z",
+      "service": "scada-bridge",
+      "message": "Dispatch ack received before command logged",
+      "metadata": {
+        "correlation_id": "grid-1188",
+        "clock_skew_ms": 1500
+      }
+    },
+    {
+      "log_id": "c23-06",
+      "timestamp": "2026-04-02T16:00:05Z",
+      "service": "ops-console",
+      "message": "Grid imbalance alert",
+      "metadata": {
+        "correlation_id": "grid-1188"
+      }
+    },
+    {
+      "log_id": "c23-07",
+      "timestamp": "2026-04-02T16:00:03Z",
+      "service": "audit-service",
+      "message": "Confirm step invoked without dispatch completion",
+      "metadata": {
+        "correlation_id": "grid-1188"
+      }
+    },
+    {
+      "log_id": "c23-08",
+      "timestamp": "2026-04-02T16:00:01Z",
+      "service": "weather-feed",
+      "message": "Wind forecast updated",
+      "metadata": {
+        "correlation_id": "grid-1188"
+      }
+    },
+    {
+      "log_id": "c23-n01",
+      "timestamp": "2026-03-12T16:00:00Z",
+      "service": "metrics-service",
+      "message": "Metric batch flushed",
+      "metadata": {
+        "correlation_id": "grid-1188",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c23-n02",
+      "timestamp": "2026-03-12T16:00:03Z",
+      "service": "cache-service",
+      "message": "Cache partition warmed",
+      "metadata": {
+        "correlation_id": "grid-1188",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c23-n03",
+      "timestamp": "2026-03-12T16:00:06Z",
+      "service": "cdn-service",
+      "message": "Edge POP health check ok",
+      "metadata": {
+        "correlation_id": "grid-1188",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c23-n04",
+      "timestamp": "2026-03-12T16:00:09Z",
+      "service": "feature-flag-service",
+      "message": "Flag evaluation cached",
+      "metadata": {
+        "correlation_id": "grid-1188",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c23-n05",
+      "timestamp": "2026-03-12T16:00:12Z",
+      "service": "session-service",
+      "message": "Session TTL refreshed",
+      "metadata": {
+        "correlation_id": "grid-1188",
+        "irrelevant": true
+      }
+    }
+  ],
+  "ground_truth": {
+    "divergence_step": "meter_confirm",
+    "root_cause_category": "sequence_skip",
+    "culprit_log_ids": [
+      "c23-04",
+      "c23-07"
+    ],
+    "required_evidence_ids": [
+      "c23-03",
+      "c23-04",
+      "c23-07"
+    ],
+    "decoy_diagnosis": {
+      "decoy_type": "temporal_wrong_causal_order",
+      "divergence_step": "dispatch_execute",
+      "root_cause_category": "race_condition",
+      "culprit_log_ids": [
+        "c23-05"
+      ],
+      "decoy_evidence_ids": [
+        "c23-05",
+        "c23-06"
+      ]
+    },
+    "acceptable_root_causes": []
+  },
+  "meta": {
+    "failure_pattern": "out_of_order_delivery",
+    "difficulty": "hard",
+    "baseline_hypothesis": "either",
+    "domain": "fintech",
+    "difficulty_factors": {
+      "log_noise": 2,
+      "causal_distance": 1,
+      "competing_hypotheses": 2,
+      "evidence_dispersion": 2,
+      "metadata_conflict": 0,
+      "temporal_ambiguity": 3
+    }
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "case_id": "case_21",
+  "process_context": {
+    "process_name": "marketplace_seller_payout",
+    "expected_sequence": [
+      "order_settle",
+      "fee_calculate",
+      "seller_payout",
+      "receipt_archive"
+    ]
+  },
+  "raw_logs": [
+    {
+      "log_id": "c21-01",
+      "timestamp": "2026-04-02T14:00:00Z",
+      "service": "order-ledger",
+      "message": "Order settled",
+      "metadata": {
+        "correlation_id": "mkt-5518"
+      }
+    },
+    {
+      "log_id": "c21-02",
+      "timestamp": "2026-04-02T14:00:01Z",
+      "service": "fee-engine",
+      "message": "Fees calculated successfully",
+      "metadata": {
+        "correlation_id": "mkt-5518",
+        "fee_state": "waived",
+        "seller_fee_due": 42.5
+      }
+    },
+    {
+      "log_id": "c21-03",
+      "timestamp": "2026-04-02T14:00:02Z",
+      "service": "payout-service",
+      "message": "Payout blocked: fee balance outstanding",
+      "metadata": {
+        "correlation_id": "mkt-5518"
+      }
+    },
+    {
+      "log_id": "c21-04",
+      "timestamp": "2026-04-02T14:00:03Z",
+      "service": "receipt-service",
+      "message": "Receipt archived with zero payout",
+      "metadata": {
+        "correlation_id": "mkt-5518"
+      }
+    },
+    {
+      "log_id": "c21-05",
+      "timestamp": "2026-04-02T14:00:04Z",
+      "service": "support-bot",
+      "message": "Seller not paid",
+      "metadata": {
+        "correlation_id": "mkt-5518"
+      }
+    },
+    {
+      "log_id": "c21-06",
+      "timestamp": "2026-04-02T14:00:01Z",
+      "service": "audit-service",
+      "message": "Promotional waiver flag not propagated to payout",
+      "metadata": {
+        "correlation_id": "mkt-5518"
+      }
+    },
+    {
+      "log_id": "c21-07",
+      "timestamp": "2026-04-02T14:00:02Z",
+      "service": "tax-service",
+      "message": "Withholding computed on full fee amount",
+      "metadata": {
+        "correlation_id": "mkt-5518"
+      }
+    },
+    {
+      "log_id": "c21-n01",
+      "timestamp": "2026-03-12T14:00:00Z",
+      "service": "metrics-service",
+      "message": "Metric batch flushed",
+      "metadata": {
+        "correlation_id": "mkt-5518",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c21-n02",
+      "timestamp": "2026-03-12T14:00:03Z",
+      "service": "cache-service",
+      "message": "Cache partition warmed",
+      "metadata": {
+        "correlation_id": "mkt-5518",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c21-n03",
+      "timestamp": "2026-03-12T14:00:06Z",
+      "service": "cdn-service",
+      "message": "Edge POP health check ok",
+      "metadata": {
+        "correlation_id": "mkt-5518",
+        "irrelevant": true
+      }
+    }
+  ],
+  "ground_truth": {
+    "divergence_step": "fee_calculate",
+    "root_cause_category": "metadata_message_conflict",
+    "culprit_log_ids": [
+      "c21-02",
+      "c21-06"
+    ],
+    "required_evidence_ids": [
+      "c21-02",
+      "c21-06",
+      "c21-03"
+    ],
+    "decoy_diagnosis": null,
+    "acceptable_root_causes": []
+  },
+  "meta": {
+    "failure_pattern": "metadata_message_conflict",
+    "difficulty": "standard",
+    "baseline_hypothesis": "baseline",
+    "domain": "ecommerce",
+    "difficulty_factors": {
+      "log_noise": 1,
+      "causal_distance": 1,
+      "competing_hypotheses": 2,
+      "evidence_dispersion": 1,
+      "metadata_conflict": 3,
+      "temporal_ambiguity": 0
+    }
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "case_id": "case_13",
+  "process_context": {
+    "process_name": "b2b_saas_trial_conversion",
+    "expected_sequence": [
+      "trial_expire",
+      "plan_select",
+      "billing_attach",
+      "feature_unlock"
+    ]
+  },
+  "raw_logs": [
+    {
+      "log_id": "c13-01",
+      "timestamp": "2026-03-12T22:00:00Z",
+      "service": "trial-service",
+      "message": "Trial expired",
+      "metadata": {
+        "correlation_id": "prov-5533"
+      }
+    },
+    {
+      "log_id": "c13-02",
+      "timestamp": "2026-03-12T22:00:01Z",
+      "service": "plan-service",
+      "message": "Plan selected",
+      "metadata": {
+        "correlation_id": "prov-5533"
+      }
+    },
+    {
+      "log_id": "c13-03",
+      "timestamp": "2026-03-12T22:00:02Z",
+      "service": "billing-service",
+      "message": "Payment method attach skipped",
+      "metadata": {
+        "correlation_id": "prov-5533"
+      }
+    },
+    {
+      "log_id": "c13-04",
+      "timestamp": "2026-03-12T22:00:03Z",
+      "service": "feature-service",
+      "message": "Unlock rejected: billing profile missing",
+      "metadata": {
+        "correlation_id": "prov-5533"
+      }
+    },
+    {
+      "log_id": "c13-05",
+      "timestamp": "2026-03-12T22:00:04Z",
+      "service": "support-bot",
+      "message": "Customer stuck on upgrade screen",
+      "metadata": {
+        "correlation_id": "prov-5533"
+      }
+    },
+    {
+      "log_id": "c13-06",
+      "timestamp": "2026-03-12T22:00:02Z",
+      "service": "audit-service",
+      "message": "No billing token recorded",
+      "metadata": {
+        "correlation_id": "prov-5533"
+      }
+    },
+    {
+      "log_id": "c13-07",
+      "timestamp": "2026-03-12T22:00:01Z",
+      "service": "notification-service",
+      "message": "Upgrade nudge sent",
+      "metadata": {
+        "correlation_id": "prov-5533"
+      }
+    },
+    {
+      "log_id": "c13-08",
+      "timestamp": "2026-03-12T22:00:00Z",
+      "service": "edge-gateway",
+      "message": "Upgrade initiated",
+      "metadata": {
+        "correlation_id": "prov-5533"
+      }
+    },
+    {
+      "log_id": "c13-n01",
+      "timestamp": "2026-03-12T22:00:00Z",
+      "service": "metrics-service",
+      "message": "Metric batch flushed",
+      "metadata": {
+        "correlation_id": "prov-5533",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c13-n02",
+      "timestamp": "2026-03-12T22:00:03Z",
+      "service": "cache-service",
+      "message": "Cache partition warmed",
+      "metadata": {
+        "correlation_id": "prov-5533",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c13-n03",
+      "timestamp": "2026-03-12T22:00:06Z",
+      "service": "cdn-service",
+      "message": "Edge POP health check ok",
+      "metadata": {
+        "correlation_id": "prov-5533",
+        "irrelevant": true
+      }
+    }
+  ],
+  "ground_truth": {
+    "divergence_step": "billing_attach",
+    "root_cause_category": "sequence_skip",
+    "culprit_log_ids": [
+      "c13-03",
+      "c13-06"
+    ],
+    "required_evidence_ids": [
+      "c13-03",
+      "c13-06",
+      "c13-04"
+    ],
+    "decoy_diagnosis": null,
+    "acceptable_root_causes": []
+  },
+  "meta": {
+    "failure_pattern": "sequence_insufficient",
+    "difficulty": "standard",
+    "baseline_hypothesis": "either",
+    "domain": "b2b_saas",
+    "difficulty_factors": {
+      "log_noise": 1,
+      "causal_distance": 2,
+      "competing_hypotheses": 1,
+      "evidence_dispersion": 2,
+      "metadata_conflict": 0,
+      "temporal_ambiguity": 0
+    }
+  }
+}

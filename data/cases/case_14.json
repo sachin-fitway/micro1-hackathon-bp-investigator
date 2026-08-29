@@ -1,0 +1,188 @@
+{
+  "case_id": "case_14",
+  "process_context": {
+    "process_name": "b2b_saas_usage_billing",
+    "expected_sequence": [
+      "usage_collect",
+      "usage_aggregate",
+      "invoice_generate",
+      "invoice_deliver"
+    ]
+  },
+  "raw_logs": [
+    {
+      "log_id": "c14-01",
+      "timestamp": "2026-03-12T23:00:00Z",
+      "service": "meter-service",
+      "message": "Usage collected",
+      "metadata": {
+        "correlation_id": "prov-4421"
+      }
+    },
+    {
+      "log_id": "c14-02",
+      "timestamp": "2026-03-12T23:00:01Z",
+      "service": "aggregate-service",
+      "message": "Aggregation complete",
+      "metadata": {
+        "correlation_id": "prov-4421",
+        "billing_state": "skipped"
+      }
+    },
+    {
+      "log_id": "c14-03",
+      "timestamp": "2026-03-12T23:00:02Z",
+      "service": "invoice-service",
+      "message": "Invoice generated",
+      "metadata": {
+        "correlation_id": "prov-4421"
+      }
+    },
+    {
+      "log_id": "c14-04",
+      "timestamp": "2026-03-12T23:00:03Z",
+      "service": "delivery-service",
+      "message": "Invoice emailed",
+      "metadata": {
+        "correlation_id": "prov-4421"
+      }
+    },
+    {
+      "log_id": "c14-05",
+      "timestamp": "2026-03-12T23:00:04Z",
+      "service": "support-bot",
+      "message": "Customer billed wrong amount",
+      "metadata": {
+        "correlation_id": "prov-4421"
+      }
+    },
+    {
+      "log_id": "c14-06",
+      "timestamp": "2026-03-12T23:00:01Z",
+      "service": "audit-service",
+      "message": "Aggregation used stale window",
+      "metadata": {
+        "correlation_id": "prov-4421",
+        "level": "DEBUG"
+      }
+    },
+    {
+      "log_id": "c14-07",
+      "timestamp": "2026-03-12T23:00:02Z",
+      "service": "reprocess-service",
+      "message": "Duplicate aggregation job detected",
+      "metadata": {
+        "correlation_id": "prov-4421"
+      }
+    },
+    {
+      "log_id": "c14-08",
+      "timestamp": "2026-03-12T23:00:03Z",
+      "service": "billing-service",
+      "message": "Invoice total matches generated PDF",
+      "metadata": {
+        "correlation_id": "prov-4421",
+        "internal_state": "draft_only"
+      }
+    },
+    {
+      "log_id": "c14-09",
+      "timestamp": "2026-03-12T23:00:00Z",
+      "service": "edge-gateway",
+      "message": "Billing cycle started",
+      "metadata": {
+        "correlation_id": "prov-4421"
+      }
+    },
+    {
+      "log_id": "c14-10",
+      "timestamp": "2026-03-12T23:00:04Z",
+      "service": "tax-service",
+      "message": "Tax line items computed",
+      "metadata": {
+        "correlation_id": "prov-4421"
+      }
+    },
+    {
+      "log_id": "c14-n01",
+      "timestamp": "2026-03-12T23:00:00Z",
+      "service": "metrics-service",
+      "message": "Metric batch flushed",
+      "metadata": {
+        "correlation_id": "prov-4421",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c14-n02",
+      "timestamp": "2026-03-12T23:00:03Z",
+      "service": "cache-service",
+      "message": "Cache partition warmed",
+      "metadata": {
+        "correlation_id": "prov-4421",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c14-n03",
+      "timestamp": "2026-03-12T23:00:06Z",
+      "service": "cdn-service",
+      "message": "Edge POP health check ok",
+      "metadata": {
+        "correlation_id": "prov-4421",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c14-n04",
+      "timestamp": "2026-03-12T23:00:09Z",
+      "service": "feature-flag-service",
+      "message": "Flag evaluation cached",
+      "metadata": {
+        "correlation_id": "prov-4421",
+        "irrelevant": true
+      }
+    }
+  ],
+  "ground_truth": {
+    "divergence_step": "usage_aggregate",
+    "root_cause_category": "metadata_message_conflict",
+    "culprit_log_ids": [
+      "c14-02",
+      "c14-06"
+    ],
+    "required_evidence_ids": [
+      "c14-02",
+      "c14-06",
+      "c14-05"
+    ],
+    "decoy_diagnosis": {
+      "decoy_type": "services_disagree_duplicate_signal",
+      "divergence_step": "usage_aggregate",
+      "root_cause_category": "duplicate_processing",
+      "culprit_log_ids": [
+        "c14-07"
+      ],
+      "decoy_evidence_ids": [
+        "c14-07",
+        "c14-08",
+        "c14-05"
+      ]
+    },
+    "acceptable_root_causes": []
+  },
+  "meta": {
+    "failure_pattern": "decoy_diagnosis",
+    "difficulty": "standard",
+    "baseline_hypothesis": "agent",
+    "domain": "b2b_saas",
+    "difficulty_factors": {
+      "log_noise": 2,
+      "causal_distance": 2,
+      "competing_hypotheses": 3,
+      "evidence_dispersion": 2,
+      "metadata_conflict": 3,
+      "temporal_ambiguity": 0
+    }
+  }
+}

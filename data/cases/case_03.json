@@ -1,0 +1,206 @@
+{
+  "case_id": "case_03",
+  "process_context": {
+    "process_name": "ecommerce_checkout",
+    "expected_sequence": [
+      "cart_validate",
+      "coupon_apply",
+      "payment_authorize",
+      "order_confirm"
+    ]
+  },
+  "raw_logs": [
+    {
+      "log_id": "c03-01",
+      "timestamp": "2026-03-12T12:00:00Z",
+      "service": "cart-service",
+      "message": "Cart validated",
+      "metadata": {
+        "correlation_id": "ord-7734"
+      }
+    },
+    {
+      "log_id": "c03-02",
+      "timestamp": "2026-03-12T12:00:01Z",
+      "service": "coupon-service",
+      "message": "Coupon evaluation deferred",
+      "metadata": {
+        "correlation_id": "ord-7734"
+      }
+    },
+    {
+      "log_id": "c03-03",
+      "timestamp": "2026-03-12T11:59:58Z",
+      "service": "payment-gateway",
+      "message": "Authorization attempted with stale amount",
+      "metadata": {
+        "correlation_id": "ord-7734",
+        "clock_skew_ms": 2000
+      }
+    },
+    {
+      "log_id": "c03-04",
+      "timestamp": "2026-03-12T12:00:02Z",
+      "service": "order-service",
+      "message": "Order confirmation blocked",
+      "metadata": {
+        "correlation_id": "ord-7734"
+      }
+    },
+    {
+      "log_id": "c03-05",
+      "timestamp": "2026-03-12T12:00:03Z",
+      "service": "audit-service",
+      "message": "Coupon step produced no discount artifact",
+      "metadata": {
+        "correlation_id": "ord-7734"
+      }
+    },
+    {
+      "log_id": "c03-06",
+      "timestamp": "2026-03-12T12:00:04Z",
+      "service": "support-bot",
+      "message": "Customer charged wrong amount",
+      "metadata": {
+        "correlation_id": "ord-7734"
+      }
+    },
+    {
+      "log_id": "c03-07",
+      "timestamp": "2026-03-12T12:00:01Z",
+      "service": "pricing-service",
+      "message": "Price snapshot v12 applied",
+      "metadata": {
+        "correlation_id": "ord-7734"
+      }
+    },
+    {
+      "log_id": "c03-08",
+      "timestamp": "2026-03-12T12:00:02Z",
+      "service": "fraud-service",
+      "message": "Risk check passed",
+      "metadata": {
+        "correlation_id": "ord-7734"
+      }
+    },
+    {
+      "log_id": "c03-09",
+      "timestamp": "2026-03-12T12:00:03Z",
+      "service": "tax-service",
+      "message": "Tax computed on pre-discount amount",
+      "metadata": {
+        "correlation_id": "ord-7734"
+      }
+    },
+    {
+      "log_id": "c03-10",
+      "timestamp": "2026-03-12T12:00:04Z",
+      "service": "recommendation-service",
+      "message": "Cross-sell impression logged",
+      "metadata": {
+        "correlation_id": "ord-7734"
+      }
+    },
+    {
+      "log_id": "c03-n01",
+      "timestamp": "2026-03-12T12:00:00Z",
+      "service": "metrics-service",
+      "message": "Metric batch flushed",
+      "metadata": {
+        "correlation_id": "ord-7734",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c03-n02",
+      "timestamp": "2026-03-12T12:00:03Z",
+      "service": "cache-service",
+      "message": "Cache partition warmed",
+      "metadata": {
+        "correlation_id": "ord-7734",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c03-n03",
+      "timestamp": "2026-03-12T12:00:06Z",
+      "service": "cdn-service",
+      "message": "Edge POP health check ok",
+      "metadata": {
+        "correlation_id": "ord-7734",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c03-n04",
+      "timestamp": "2026-03-12T12:00:09Z",
+      "service": "feature-flag-service",
+      "message": "Flag evaluation cached",
+      "metadata": {
+        "correlation_id": "ord-7734",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c03-n05",
+      "timestamp": "2026-03-12T12:00:12Z",
+      "service": "session-service",
+      "message": "Session TTL refreshed",
+      "metadata": {
+        "correlation_id": "ord-7734",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c03-n06",
+      "timestamp": "2026-03-12T12:00:15Z",
+      "service": "rate-limiter",
+      "message": "Token bucket replenished",
+      "metadata": {
+        "correlation_id": "ord-7734",
+        "irrelevant": true
+      }
+    }
+  ],
+  "ground_truth": {
+    "divergence_step": "coupon_apply",
+    "root_cause_category": "sequence_skip",
+    "culprit_log_ids": [
+      "c03-02",
+      "c03-05"
+    ],
+    "required_evidence_ids": [
+      "c03-02",
+      "c03-05",
+      "c03-09"
+    ],
+    "decoy_diagnosis": {
+      "decoy_type": "temporal_wrong_causal_order",
+      "divergence_step": "payment_authorize",
+      "root_cause_category": "timeout_stall",
+      "culprit_log_ids": [
+        "c03-03"
+      ],
+      "decoy_evidence_ids": [
+        "c03-03",
+        "c03-06",
+        "c03-09"
+      ]
+    },
+    "acceptable_root_causes": []
+  },
+  "meta": {
+    "failure_pattern": "decoy_diagnosis",
+    "difficulty": "hard",
+    "baseline_hypothesis": "either",
+    "domain": "ecommerce",
+    "difficulty_factors": {
+      "log_noise": 2,
+      "causal_distance": 2,
+      "competing_hypotheses": 2,
+      "evidence_dispersion": 2,
+      "metadata_conflict": 1,
+      "temporal_ambiguity": 3
+    }
+  }
+}

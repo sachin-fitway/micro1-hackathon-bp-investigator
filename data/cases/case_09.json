@@ -1,0 +1,185 @@
+{
+  "case_id": "case_09",
+  "process_context": {
+    "process_name": "fintech_card_auth",
+    "expected_sequence": [
+      "auth_request",
+      "fraud_score",
+      "issuer_approve",
+      "ledger_hold"
+    ]
+  },
+  "raw_logs": [
+    {
+      "log_id": "c09-01",
+      "timestamp": "2026-03-12T18:00:00Z",
+      "service": "auth-gateway",
+      "message": "Auth request received",
+      "metadata": {
+        "correlation_id": "txn-1107"
+      }
+    },
+    {
+      "log_id": "c09-02",
+      "timestamp": "2026-03-12T18:00:01Z",
+      "service": "fraud-service",
+      "message": "Score computed",
+      "metadata": {
+        "correlation_id": "txn-1107"
+      }
+    },
+    {
+      "log_id": "c09-03",
+      "timestamp": "2026-03-12T18:00:01Z",
+      "service": "fraud-service",
+      "message": "Duplicate score event consumed",
+      "metadata": {
+        "correlation_id": "txn-1107"
+      }
+    },
+    {
+      "log_id": "c09-04",
+      "timestamp": "2026-03-12T18:00:02Z",
+      "service": "issuer-network",
+      "message": "Approval delayed: conflicting risk signals",
+      "metadata": {
+        "correlation_id": "txn-1107"
+      }
+    },
+    {
+      "log_id": "c09-05",
+      "timestamp": "2026-03-12T18:00:03Z",
+      "service": "ledger-service",
+      "message": "Hold not created",
+      "metadata": {
+        "correlation_id": "txn-1107"
+      }
+    },
+    {
+      "log_id": "c09-06",
+      "timestamp": "2026-03-12T18:00:04Z",
+      "service": "support-bot",
+      "message": "Customer saw duplicate charge attempt",
+      "metadata": {
+        "correlation_id": "txn-1107"
+      }
+    },
+    {
+      "log_id": "c09-07",
+      "timestamp": "2026-03-12T18:00:02Z",
+      "service": "audit-service",
+      "message": "Two fraud events within 50ms",
+      "metadata": {
+        "correlation_id": "txn-1107"
+      }
+    },
+    {
+      "log_id": "c09-08",
+      "timestamp": "2026-03-12T18:00:03Z",
+      "service": "issuer-network",
+      "message": "Issuer reports duplicate authorization request",
+      "metadata": {
+        "correlation_id": "txn-1107"
+      }
+    },
+    {
+      "log_id": "c09-09",
+      "timestamp": "2026-03-12T18:00:00Z",
+      "service": "edge-gateway",
+      "message": "Card present",
+      "metadata": {
+        "correlation_id": "txn-1107"
+      }
+    },
+    {
+      "log_id": "c09-10",
+      "timestamp": "2026-03-12T18:00:04Z",
+      "service": "token-service",
+      "message": "Token vault lookup ok",
+      "metadata": {
+        "correlation_id": "txn-1107"
+      }
+    },
+    {
+      "log_id": "c09-n01",
+      "timestamp": "2026-03-12T18:00:00Z",
+      "service": "metrics-service",
+      "message": "Metric batch flushed",
+      "metadata": {
+        "correlation_id": "txn-1107",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c09-n02",
+      "timestamp": "2026-03-12T18:00:03Z",
+      "service": "cache-service",
+      "message": "Cache partition warmed",
+      "metadata": {
+        "correlation_id": "txn-1107",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c09-n03",
+      "timestamp": "2026-03-12T18:00:06Z",
+      "service": "cdn-service",
+      "message": "Edge POP health check ok",
+      "metadata": {
+        "correlation_id": "txn-1107",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c09-n04",
+      "timestamp": "2026-03-12T18:00:09Z",
+      "service": "feature-flag-service",
+      "message": "Flag evaluation cached",
+      "metadata": {
+        "correlation_id": "txn-1107",
+        "irrelevant": true
+      }
+    }
+  ],
+  "ground_truth": {
+    "divergence_step": "fraud_score",
+    "root_cause_category": "race_condition",
+    "culprit_log_ids": [
+      "c09-03",
+      "c09-07"
+    ],
+    "required_evidence_ids": [
+      "c09-03",
+      "c09-07",
+      "c09-04"
+    ],
+    "decoy_diagnosis": {
+      "decoy_type": "duplicate_false_diagnosis",
+      "divergence_step": "issuer_approve",
+      "root_cause_category": "duplicate_processing",
+      "culprit_log_ids": [
+        "c09-08"
+      ],
+      "decoy_evidence_ids": [
+        "c09-08",
+        "c09-06",
+        "c09-10"
+      ]
+    },
+    "acceptable_root_causes": []
+  },
+  "meta": {
+    "failure_pattern": "decoy_diagnosis",
+    "difficulty": "standard",
+    "baseline_hypothesis": "either",
+    "domain": "fintech",
+    "difficulty_factors": {
+      "log_noise": 2,
+      "causal_distance": 2,
+      "competing_hypotheses": 3,
+      "evidence_dispersion": 2,
+      "metadata_conflict": 0,
+      "temporal_ambiguity": 1
+    }
+  }
+}

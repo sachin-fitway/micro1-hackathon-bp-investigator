@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Give messy distributed logs. Get divergence, evidence, causal chain, and an incident report." />
+  <title>Incident Investigator — Find what failed. Prove why.</title>
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/static/landing.css" />
+</head>
+<body>
+  <header class="lp-header">
+    <a href="/" class="lp-logo">
+      <span class="lp-logo-mark" aria-hidden="true">◈</span>
+      <span class="lp-logo-text">Incident Investigator</span>
+    </a>
+    <nav class="lp-nav" aria-label="Landing page">
+      <a href="#how-it-works" class="lp-nav-link">How it Works</a>
+      <a href="#evidence-first" class="lp-nav-link">Evidence</a>
+      <a href="/investigate?view=evaluation" class="lp-nav-link">Evaluation</a>
+    </nav>
+    <a href="/investigate" class="lp-btn lp-btn-primary lp-header-cta">Try Now →</a>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="lp-hero" id="top">
+      <div class="lp-container lp-hero-grid">
+        <div class="lp-hero-copy reveal">
+          <p class="lp-eyebrow">Evidence-grounded incident investigation</p>
+          <h1 class="lp-headline">Find what failed.<br />Prove why.</h1>
+          <p class="lp-product-story">Give us distributed-system logs. We find where the workflow diverged, show the evidence, reconstruct the causal chain, and turn it into an incident-ready report.</p>
+          <div class="lp-hero-actions">
+            <a href="/investigate" class="lp-btn lp-btn-primary lp-btn-lg">Try Now →</a>
+            <a href="#problem" class="lp-btn lp-btn-ghost lp-btn-lg">See How It Works ↓</a>
+          </div>
+        </div>
+
+        <div class="lp-hero-story reveal" aria-label="Sample incident investigation flow">
+          <p class="lp-story-badge">Sample incident · Case 01</p>
+          <div class="lp-story-flow">
+            <div class="lp-story-step lp-story-animate" style="--step:0">
+              <span class="lp-story-kicker">Input</span>
+              <span class="lp-story-main">11 logs</span>
+            </div>
+            <div class="lp-story-connector lp-story-animate" style="--step:1">↓</div>
+            <div class="lp-story-step lp-story-box lp-story-animate" style="--step:2">
+              <span class="lp-story-kicker">Process</span>
+              <span class="lp-story-main">Investigation</span>
+            </div>
+            <div class="lp-story-connector lp-story-animate" style="--step:3">↓</div>
+            <div class="lp-story-step lp-story-highlight lp-story-animate" style="--step:4">
+              <span class="lp-story-kicker">Divergence found</span>
+              <span class="lp-story-main mono">inventory_reserve</span>
+            </div>
+            <div class="lp-story-connector lp-story-animate" style="--step:5">↓</div>
+            <div class="lp-story-step lp-story-animate" style="--step:6">
+              <span class="lp-story-kicker">Root cause</span>
+              <span class="lp-story-main">Sequence skip</span>
+            </div>
+            <div class="lp-story-connector lp-story-animate" style="--step:7">↓</div>
+            <div class="lp-story-evidence lp-story-animate" style="--step:8">
+              <span class="lp-evidence-chip mono">✓ c01-02</span>
+              <span class="lp-evidence-chip mono">✓ c01-03</span>
+            </div>
+            <div class="lp-story-connector lp-story-animate" style="--step:9">↓</div>
+            <div class="lp-story-step lp-story-final lp-story-animate" style="--step:10">
+              <span class="lp-story-main">Incident post-mortem</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Problem -->
+    <section class="lp-section lp-section-spotlight" id="problem">
+      <div class="lp-container reveal">
+        <p class="lp-spotlight-eyebrow">The core problem</p>
+        <h2 class="lp-section-title lp-center lp-spotlight-title">Thousands of logs. One actual cause.</h2>
+        <p class="lp-body lp-center lp-narrow">When a distributed workflow breaks, the loudest error is rarely where the failure began.</p>
+
+        <div class="lp-contrast-grid lp-contrast-featured">
+          <div class="lp-contrast-panel lp-contrast-noise">
+            <span class="lp-contrast-label">What you see</span>
+            <h3 class="lp-contrast-title">Thousands of log lines</h3>
+            <ul class="lp-log-wall" aria-hidden="true">
+              <li><span class="mono">ERR</span> payment-gateway · authorization failed</li>
+              <li><span class="mono">WARN</span> cart-service · retry attempt 3</li>
+              <li><span class="mono">ERR</span> order-service · confirmation timeout</li>
+              <li><span class="mono">INFO</span> inventory-service · fast-path enabled</li>
+              <li><span class="mono">ERR</span> notification · email not sent</li>
+              <li><span class="mono">ERR</span> payment-gateway · no reservation</li>
+              <li><span class="mono">WARN</span> api-gateway · 502 downstream</li>
+              <li><span class="mono">ERR</span> checkout · transaction aborted</li>
+            </ul>
+            <p class="lp-contrast-foot">Many errors. One transaction. No obvious starting point.</p>
+          </div>
+
+          <div class="lp-contrast-arrow" aria-hidden="true">→</div>
+
+          <div class="lp-contrast-panel lp-contrast-focus">
+            <span class="lp-contrast-label">What you need</span>
+            <h3 class="lp-contrast-title">One actual cause</h3>
+            <div class="lp-focus-card">
+              <span class="lp-focus-tag">Divergence</span>
+              <span class="mono lp-focus-value">inventory_reserve</span>
+              <p class="lp-focus-msg">Reservation skipped: legacy fast-path enabled</p>
+              <span class="mono lp-focus-id">c01-02</span>
+            </div>
+            <p class="lp-contrast-foot">The challenge isn't finding an error. It's finding the divergence that caused the errors.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="lp-section lp-section-alt" id="how-it-works">
+      <div class="lp-container reveal">
+        <h2 class="lp-section-title lp-center">From raw logs to an evidence-backed explanation.</h2>
+        <ol class="lp-pipeline">
+          <li class="lp-pipeline-step">
+            <span class="lp-step-num">01</span>
+            <h3 class="lp-step-title">Logs</h3>
+            <p class="lp-step-desc">Collect the incident timeline and service activity.</p>
+          </li>
+          <li class="lp-pipeline-step">
+            <span class="lp-step-num">02</span>
+            <h3 class="lp-step-title">Investigation</h3>
+            <p class="lp-step-desc">Trace the workflow across expected process steps.</p>
+          </li>
+          <li class="lp-pipeline-step">
+            <span class="lp-step-num">03</span>
+            <h3 class="lp-step-title">Root Cause</h3>
+            <p class="lp-step-desc">Identify where the process actually diverged.</p>
+          </li>
+          <li class="lp-pipeline-step">
+            <span class="lp-step-num">04</span>
+            <h3 class="lp-step-title">Evidence</h3>
+            <p class="lp-step-desc">Ground the diagnosis in the underlying log records.</p>
+          </li>
+          <li class="lp-pipeline-step">
+            <span class="lp-step-num">05</span>
+            <h3 class="lp-step-title">Post-Mortem</h3>
+            <p class="lp-step-desc">Turn the investigation into an incident-ready report.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Product preview -->
+    <section class="lp-section" id="preview">
+      <div class="lp-container reveal">
+        <h2 class="lp-section-title lp-center">See the investigation, not just the answer.</h2>
+        <p class="lp-body lp-center lp-narrow">The same result view you get after running a real investigation — divergence, evidence, causal chain, and post-mortem.</p>
+
+        <div class="lp-app-frame">
+          <div class="lp-app-chrome">
+            <span class="lp-app-dot"></span><span class="lp-app-dot"></span><span class="lp-app-dot"></span>
+            <span class="lp-app-url">incident-investigator / case_01</span>
+          </div>
+          <div class="lp-app-body">
+            <p class="lp-mock-tag">What went wrong?</p>
+            <h3 class="lp-mock-headline">Inventory reserve failed</h3>
+            <div class="lp-mock-grid">
+              <div><span class="lp-mock-label">Divergence</span><span class="lp-mock-value mono">inventory_reserve</span></div>
+              <div><span class="lp-mock-label">Root Cause</span><span class="lp-mock-value">Sequence Skip</span></div>
+            </div>
+            <p class="lp-mock-explain">The inventory_reserve step was skipped due to legacy fast-path configuration. Payment authorization failed because no active reservation existed.</p>
+
+            <p class="lp-mock-section-label">Why we believe this</p>
+            <div class="lp-mock-evidence">
+              <div class="lp-mock-log"><span class="mono">c01-02</span> Reservation skipped: legacy fast-path enabled</div>
+              <div class="lp-mock-log"><span class="mono">c01-03</span> Authorization failed: no active reservation</div>
+            </div>
+
+            <p class="lp-mock-section-label">Causal chain</p>
+            <div class="lp-mock-chain">
+              <span>Reservation skipped</span><span class="lp-mock-chain-arrow">↓</span>
+              <span class="lp-mock-chain-fail">SKIPPED</span><span class="lp-mock-chain-arrow">↓</span>
+              <span>Authorization failed</span><span class="lp-mock-chain-arrow">↓</span>
+              <span>Checkout failed</span>
+            </div>
+          </div>
+        </div>
+
+        <ul class="lp-callouts-row">
+          <li>Divergence detected</li>
+          <li>Evidence linked</li>
+          <li>Causal chain reconstructed</li>
+          <li>Post-mortem generated</li>
+        </ul>
+        <p class="lp-demo-note">Illustrative sample from Case 01 — not a live prediction.</p>
+      </div>
+    </section>
+
+    <!-- Evidence-first (featured) -->
+    <section class="lp-section lp-section-featured lp-section-evidence" id="evidence-first">
+      <div class="lp-container reveal">
+        <div class="lp-featured-header">
+          <p class="lp-featured-eyebrow">Key differentiator</p>
+          <h2 class="lp-section-title lp-proof-headline">Every diagnosis should have proof.</h2>
+          <p class="lp-body lp-center lp-narrow">No orphan root-cause labels — every claim traces to log records you can inspect and audit.</p>
+        </div>
+
+        <div class="lp-evidence-showcase">
+          <div class="lp-evidence-diagnosis">
+            <span class="lp-demo-badge">Sample diagnosis</span>
+            <dl class="lp-evidence-dl">
+              <dt>Divergence</dt><dd class="mono">inventory_reserve</dd>
+              <dt>Root cause</dt><dd>Sequence skip</dd>
+              <dt>Category</dt><dd class="mono">sequence_skip</dd>
+            </dl>
+          </div>
+          <div class="lp-evidence-link" aria-hidden="true">
+            <span class="lp-link-line"></span>
+            <span class="lp-link-label">linked to</span>
+            <span class="lp-link-line"></span>
+          </div>
+          <div class="lp-evidence-logs">
+            <article class="lp-evidence-log-card">
+              <header><span class="mono">c01-02</span><span class="lp-log-role">Culprit</span></header>
+              <p>Reservation skipped: legacy fast-path enabled</p>
+              <footer>inventory-service · 10:00:03Z</footer>
+            </article>
+            <article class="lp-evidence-log-card">
+              <header><span class="mono">c01-03</span><span class="lp-log-role">Evidence</span></header>
+              <p>Authorization failed: no active reservation</p>
+              <footer>payment-gateway · 10:00:05Z</footer>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Causal chain -->
+    <section class="lp-section" id="causal-chain">
+      <div class="lp-container lp-split reveal">
+        <div class="lp-split-copy">
+          <h2 class="lp-section-title">Separate the cause from the symptoms.</h2>
+          <p class="lp-body">Downstream errors connect to the event that caused them — instead of being treated as independent failures.</p>
+        </div>
+        <div class="lp-causal-demo lp-causal-animated" id="causal-demo" aria-label="Animated causal chain demonstration">
+          <p class="lp-demo-badge">Sample causal chain</p>
+          <div class="lp-causal-node" data-step="0">Inventory Reservation</div>
+          <div class="lp-causal-arrow">↓</div>
+          <div class="lp-causal-node lp-causal-fail lp-causal-fail-emphasis" data-step="1">
+            <span class="lp-causal-fail-label">Failure point</span>
+            SKIPPED
+          </div>
+          <div class="lp-causal-arrow">↓</div>
+          <div class="lp-causal-node" data-step="2">Payment Authorization</div>
+          <div class="lp-causal-arrow">↓</div>
+          <div class="lp-causal-node" data-step="3">No Active Reservation</div>
+          <div class="lp-causal-arrow">↓</div>
+          <div class="lp-causal-node lp-causal-symptom" data-step="4">Checkout Failed</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Post-mortem -->
+    <section class="lp-section lp-section-alt" id="post-mortem">
+      <div class="lp-container reveal">
+        <h2 class="lp-section-title lp-center">From investigation to incident-ready report.</h2>
+        <p class="lp-body lp-center lp-narrow">Once the diagnosis is established, the investigation becomes a structured report a human can review, share, and act on.</p>
+
+        <div class="lp-report-preview lp-report-expanded">
+          <ul class="lp-report-sections">
+            <li class="active">Executive Summary</li>
+            <li>Incident Timeline</li>
+            <li>Root Cause</li>
+            <li>Causal Chain</li>
+            <li>Impact</li>
+            <li>Remediation</li>
+            <li>Evidence</li>
+          </ul>
+          <div class="lp-report-sample">
+            <h3>Executive Summary</h3>
+            <p>During an ecommerce_checkout process, the inventory_reserve step was skipped due to a legacy fast-path configuration. Payment authorization failed because no active reservation was in place.</p>
+
+            <h3>Incident Timeline</h3>
+            <ul class="lp-report-timeline">
+              <li><span class="mono">10:00:03Z</span> inventory-service — Reservation skipped: legacy fast-path enabled <span class="mono">c01-02</span></li>
+              <li><span class="mono">10:00:05Z</span> payment-gateway — Authorization failed: no active reservation <span class="mono">c01-03</span></li>
+            </ul>
+
+            <h3>Detected Divergence</h3>
+            <p class="mono">inventory_reserve · sequence_skip</p>
+
+            <h3>Causal Chain</h3>
+            <ol class="lp-report-chain">
+              <li>inventory_reserve skipped (legacy fast-path)</li>
+              <li>payment_authorize attempted without reservation</li>
+              <li>Authorization failed — checkout aborted</li>
+            </ol>
+
+            <h3>Evidence</h3>
+            <table class="lp-report-table">
+              <thead><tr><th>Log ID</th><th>Service</th><th>Message</th></tr></thead>
+              <tbody>
+                <tr><td class="mono">c01-02</td><td>inventory-service</td><td>Reservation skipped: legacy fast-path enabled</td></tr>
+                <tr><td class="mono">c01-03</td><td>payment-gateway</td><td>Authorization failed: no active reservation</td></tr>
+              </tbody>
+            </table>
+
+            <h3>Recommended Remediation</h3>
+            <ol class="lp-report-chain">
+              <li>Investigate legacy fast-path conditions and disable if unintended</li>
+              <li>Enforce reservation dependency before payment authorization</li>
+              <li>Alert when inventory_reserve is skipped unexpectedly</li>
+            </ol>
+          </div>
+        </div>
+        <p class="lp-demo-note">Excerpt from a generated post-mortem (Case 01 sample) — ready to review, share, and act on.</p>
+      </div>
+    </section>
+
+    <!-- Benchmark credibility -->
+    <section class="lp-section" id="benchmark">
+      <div class="lp-container reveal">
+        <h2 class="lp-section-title lp-center">Built to be evaluated, not just demonstrated.</h2>
+        <div id="lp-benchmark-stats" class="lp-stats-grid">
+          <div class="lp-stat">
+            <span class="lp-stat-value" data-stat="cases">15</span>
+            <span class="lp-stat-label">Benchmark cases</span>
+          </div>
+          <div class="lp-stat">
+            <span class="lp-stat-value" data-stat="iqs">—</span>
+            <span class="lp-stat-label">Mean IQS</span>
+            <span class="lp-stat-sublabel">15-case development benchmark</span>
+          </div>
+          <div class="lp-stat">
+            <span class="lp-stat-value" data-stat="recall">—</span>
+            <span class="lp-stat-label">Evidence recall</span>
+          </div>
+          <div class="lp-stat">
+            <span class="lp-stat-value" data-stat="divergence">—</span>
+            <span class="lp-stat-label">Divergence accuracy</span>
+          </div>
+          <div class="lp-stat">
+            <span class="lp-stat-value" data-stat="nofab">—</span>
+            <span class="lp-stat-label">No fabrication</span>
+          </div>
+        </div>
+        <p class="lp-benchmark-disclaimer"><strong>Measured on our fixed 15-case development benchmark.</strong> Not a claim of universal accuracy.</p>
+        <div class="lp-center lp-mt">
+          <a href="/investigate?view=evaluation" class="lp-btn lp-btn-ghost">View full evaluation →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="lp-section lp-final-cta">
+      <div class="lp-container reveal lp-center">
+        <h2 class="lp-final-headline">Your next incident shouldn't start with<br />"Where do I even begin?"</h2>
+        <p class="lp-body lp-narrow">Give Incident Investigator the logs.<br />Get an evidence-backed investigation.</p>
+        <a href="/investigate" class="lp-btn lp-btn-primary lp-btn-lg">Try Now →</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="lp-footer">
+    <div class="lp-container">
+      <span class="lp-footer-brand">◈ Incident Investigator</span>
+      <a href="/investigate" class="lp-footer-link">Open investigator →</a>
+    </div>
+  </footer>
+
+  <script src="/static/landing.js"></script>
+</body>
+</html>

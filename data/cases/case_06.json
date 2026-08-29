@@ -1,0 +1,145 @@
+{
+  "case_id": "case_06",
+  "process_context": {
+    "process_name": "fintech_transfer",
+    "expected_sequence": [
+      "account_debit",
+      "compliance_screen",
+      "ledger_post",
+      "beneficiary_credit"
+    ]
+  },
+  "raw_logs": [
+    {
+      "log_id": "c06-01",
+      "timestamp": "2026-03-12T15:00:00Z",
+      "service": "core-banking",
+      "message": "Debit initiated",
+      "metadata": {
+        "correlation_id": "txn-4410"
+      }
+    },
+    {
+      "log_id": "c06-02",
+      "timestamp": "2026-03-12T15:00:01Z",
+      "service": "compliance-engine",
+      "message": "Screening queue bypassed for trusted corridor",
+      "metadata": {
+        "correlation_id": "txn-4410"
+      }
+    },
+    {
+      "log_id": "c06-03",
+      "timestamp": "2026-03-12T15:00:02Z",
+      "service": "ledger-service",
+      "message": "Post rejected: missing compliance token",
+      "metadata": {
+        "correlation_id": "txn-4410"
+      }
+    },
+    {
+      "log_id": "c06-04",
+      "timestamp": "2026-03-12T15:00:03Z",
+      "service": "beneficiary-bank",
+      "message": "Credit never received",
+      "metadata": {
+        "correlation_id": "txn-4410"
+      }
+    },
+    {
+      "log_id": "c06-05",
+      "timestamp": "2026-03-12T15:00:04Z",
+      "service": "support-bot",
+      "message": "Transfer stuck in processing",
+      "metadata": {
+        "correlation_id": "txn-4410"
+      }
+    },
+    {
+      "log_id": "c06-06",
+      "timestamp": "2026-03-12T15:00:01Z",
+      "service": "audit-service",
+      "message": "No compliance artifact attached",
+      "metadata": {
+        "correlation_id": "txn-4410"
+      }
+    },
+    {
+      "log_id": "c06-07",
+      "timestamp": "2026-03-12T15:00:00Z",
+      "service": "edge-gateway",
+      "message": "Transfer request accepted",
+      "metadata": {
+        "correlation_id": "txn-4410"
+      }
+    },
+    {
+      "log_id": "c06-08",
+      "timestamp": "2026-03-12T15:00:02Z",
+      "service": "risk-service",
+      "message": "Velocity check passed",
+      "metadata": {
+        "correlation_id": "txn-4410"
+      }
+    },
+    {
+      "log_id": "c06-n01",
+      "timestamp": "2026-03-12T15:00:00Z",
+      "service": "metrics-service",
+      "message": "Metric batch flushed",
+      "metadata": {
+        "correlation_id": "txn-4410",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c06-n02",
+      "timestamp": "2026-03-12T15:00:03Z",
+      "service": "cache-service",
+      "message": "Cache partition warmed",
+      "metadata": {
+        "correlation_id": "txn-4410",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c06-n03",
+      "timestamp": "2026-03-12T15:00:06Z",
+      "service": "cdn-service",
+      "message": "Edge POP health check ok",
+      "metadata": {
+        "correlation_id": "txn-4410",
+        "irrelevant": true
+      }
+    }
+  ],
+  "ground_truth": {
+    "divergence_step": "compliance_screen",
+    "root_cause_category": "sequence_skip",
+    "culprit_log_ids": [
+      "c06-02",
+      "c06-06"
+    ],
+    "required_evidence_ids": [
+      "c06-02",
+      "c06-06",
+      "c06-03"
+    ],
+    "decoy_diagnosis": null,
+    "acceptable_root_causes": []
+  },
+  "meta": {
+    "failure_pattern": "sequence_insufficient",
+    "difficulty": "standard",
+    "baseline_hypothesis": "either",
+    "domain": "fintech",
+    "difficulty_factors": {
+      "log_noise": 1,
+      "causal_distance": 2,
+      "competing_hypotheses": 1,
+      "evidence_dispersion": 2,
+      "metadata_conflict": 0,
+      "temporal_ambiguity": 0
+    }
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "case_id": "case_11",
+  "process_context": {
+    "process_name": "b2b_saas_provisioning",
+    "expected_sequence": [
+      "contract_signed",
+      "tenant_create",
+      "seat_allocate",
+      "welcome_email"
+    ]
+  },
+  "raw_logs": [
+    {
+      "log_id": "c11-06",
+      "timestamp": "2026-03-12T20:00:05Z",
+      "service": "email-service",
+      "message": "Welcome email never triggered",
+      "metadata": {
+        "correlation_id": "prov-7711"
+      }
+    },
+    {
+      "log_id": "c11-02",
+      "timestamp": "2026-03-12T20:00:01Z",
+      "service": "tenant-service",
+      "message": "Tenant created",
+      "metadata": {
+        "correlation_id": "prov-7711"
+      }
+    },
+    {
+      "log_id": "c11-01",
+      "timestamp": "2026-03-12T20:00:00Z",
+      "service": "contract-service",
+      "message": "Contract signed",
+      "metadata": {
+        "correlation_id": "prov-7711"
+      }
+    },
+    {
+      "log_id": "c11-05",
+      "timestamp": "2026-03-12T20:00:04Z",
+      "service": "seat-service",
+      "message": "Seat allocation skipped: tenant flag inactive",
+      "metadata": {
+        "correlation_id": "prov-7711"
+      }
+    },
+    {
+      "log_id": "c11-04",
+      "timestamp": "2026-03-12T20:00:03Z",
+      "service": "audit-service",
+      "message": "Tenant marked inactive pending billing sync",
+      "metadata": {
+        "correlation_id": "prov-7711"
+      }
+    },
+    {
+      "log_id": "c11-03",
+      "timestamp": "2026-03-12T20:00:02Z",
+      "service": "billing-service",
+      "message": "Billing profile pending",
+      "metadata": {
+        "correlation_id": "prov-7711"
+      }
+    },
+    {
+      "log_id": "c11-07",
+      "timestamp": "2026-03-12T20:00:06Z",
+      "service": "support-bot",
+      "message": "Customer cannot log in",
+      "metadata": {
+        "correlation_id": "prov-7711"
+      }
+    },
+    {
+      "log_id": "c11-08",
+      "timestamp": "2026-03-12T20:00:02Z",
+      "service": "edge-gateway",
+      "message": "Provisioning workflow started",
+      "metadata": {
+        "correlation_id": "prov-7711"
+      }
+    },
+    {
+      "log_id": "c11-n01",
+      "timestamp": "2026-03-12T20:00:00Z",
+      "service": "metrics-service",
+      "message": "Metric batch flushed",
+      "metadata": {
+        "correlation_id": "prov-7711",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c11-n02",
+      "timestamp": "2026-03-12T20:00:03Z",
+      "service": "cache-service",
+      "message": "Cache partition warmed",
+      "metadata": {
+        "correlation_id": "prov-7711",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c11-n03",
+      "timestamp": "2026-03-12T20:00:06Z",
+      "service": "cdn-service",
+      "message": "Edge POP health check ok",
+      "metadata": {
+        "correlation_id": "prov-7711",
+        "irrelevant": true
+      }
+    }
+  ],
+  "ground_truth": {
+    "divergence_step": "seat_allocate",
+    "root_cause_category": "sequence_skip",
+    "culprit_log_ids": [
+      "c11-05",
+      "c11-04"
+    ],
+    "required_evidence_ids": [
+      "c11-04",
+      "c11-05",
+      "c11-06"
+    ],
+    "decoy_diagnosis": null,
+    "acceptable_root_causes": []
+  },
+  "meta": {
+    "failure_pattern": "out_of_order_delivery",
+    "difficulty": "standard",
+    "baseline_hypothesis": "either",
+    "domain": "b2b_saas",
+    "difficulty_factors": {
+      "log_noise": 1,
+      "causal_distance": 1,
+      "competing_hypotheses": 1,
+      "evidence_dispersion": 2,
+      "metadata_conflict": 0,
+      "temporal_ambiguity": 2
+    }
+  }
+}

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Investigate — Incident Investigator</title>
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <a href="/" class="brand brand-link">
+      <span class="brand-mark">◈</span>
+      <div>
+        <h1>Incident Investigator</h1>
+        <p class="subtitle">Find what failed. Prove why.</p>
+      </div>
+    </a>
+    <nav class="app-nav" aria-label="Application views">
+      <button type="button" id="nav-investigate" class="nav-btn active">Investigate</button>
+      <button type="button" id="nav-evaluation" class="nav-btn">Evaluation</button>
+    </nav>
+  </header>
+
+  <main class="layout">
+    <div id="investigate-view" class="view">
+      <section class="primary-card" id="input-panel">
+        <h2 class="card-question">What do you want to investigate?</h2>
+
+        <div class="field">
+          <label class="sr-only" for="case-select">Select a benchmark incident</label>
+          <select id="case-select" class="case-select"></select>
+        </div>
+
+        <div id="case-preview" class="case-preview">
+          <div id="preview-case-name" class="preview-case-name">Case 01</div>
+          <div id="preview-process-name" class="preview-process-name">Ecommerce Checkout</div>
+          <div id="preview-log-count" class="preview-log-count">11 logs</div>
+        </div>
+
+        <button id="investigate-btn" class="primary-btn" disabled>Investigate Incident</button>
+
+        <details class="custom-incident">
+          <summary>Use your own incident</summary>
+          <label class="sr-only" for="payload-input">Paste incident JSON</label>
+          <textarea id="payload-input" rows="5" placeholder='{"case_id":"custom","process_context":{...},"raw_logs":[...]}'></textarea>
+        </details>
+
+        <p id="input-error" class="error-text hidden"></p>
+      </section>
+
+      <section class="benchmark-section" id="benchmark-panel">
+        <div class="section-label-row">
+          <h2 class="section-title">Benchmark Incidents</h2>
+          <p class="section-desc">Try any of the 15 reproducible incidents. Ground truth is hidden until investigation.</p>
+        </div>
+        <div id="benchmark-case-grid" class="benchmark-grid" role="listbox" aria-label="Benchmark incidents"></div>
+      </section>
+    </div>
+
+    <div id="evaluation-view" class="view hidden">
+      <section class="evaluation-card">
+        <h2 class="section-title">Benchmark Results</h2>
+        <p class="section-desc">Aggregate evaluation metrics for the 15-case development benchmark. These are not universal product accuracy claims.</p>
+        <div id="benchmark-overview" class="benchmark-overview empty-state">Loading evaluation summary…</div>
+      </section>
+    </div>
+
+    <div id="story-root" class="story-root hidden">
+      <section class="result-hero diagnosis-hero" id="hero-panel" tabindex="-1">
+        <div class="diagnosis-meta">
+          <span id="hero-process-name" class="hero-process-name"></span>
+          <span id="hero-case-id" class="result-case-tag"></span>
+        </div>
+        <p class="result-eyebrow">What failed?</p>
+        <h2 id="hero-failure-title" class="result-headline"></h2>
+
+        <div class="diagnosis-grid">
+          <div class="diagnosis-item">
+            <span class="diagnosis-label">Divergence step</span>
+            <span id="hero-divergence" class="diagnosis-value mono"></span>
+          </div>
+          <div class="diagnosis-item">
+            <span class="diagnosis-label">Root cause category</span>
+            <span id="hero-root-cause" class="diagnosis-value"></span>
+          </div>
+        </div>
+
+        <p id="hero-explanation" class="result-explanation"></p>
+      </section>
+
+      <section class="result-section result-section-prominent" id="causal-panel">
+        <h3 class="result-section-title result-section-title-strong">How it unfolded</h3>
+        <p class="result-section-lead">Root cause → downstream consequence</p>
+        <div id="mechanism-chain" class="mechanism-chain-vertical"></div>
+      </section>
+
+      <section class="result-section" id="key-evidence-panel">
+        <h3 class="result-section-title">Why we believe this</h3>
+        <div id="key-evidence-list" class="evidence-list-compact"></div>
+      </section>
+
+      <div class="result-actions result-actions-primary">
+        <button id="explore-evidence-btn" class="secondary-btn" type="button">Explore Evidence</button>
+        <button id="view-postmortem-btn" class="secondary-btn" type="button">View Post-Mortem</button>
+      </div>
+
+      <div class="result-actions-secondary">
+        <details class="result-section trace-panel" id="ai-trace-panel">
+          <summary>Show investigation process</summary>
+          <div id="story-phases" class="story-phases"></div>
+        </details>
+        <button id="new-investigation-btn" class="ghost-btn" type="button">New Investigation</button>
+      </div>
+
+      <section class="result-section hidden" id="evidence-explorer-panel">
+        <div class="explorer-header">
+          <h3 class="result-section-title">Evidence explorer</h3>
+          <button id="close-evidence-btn" class="ghost-btn" type="button">Close</button>
+        </div>
+        <div id="full-evidence-list" class="key-evidence-list"></div>
+        <div id="log-detail" class="log-detail empty-state hidden-detail">Select a log to inspect the raw record.</div>
+      </section>
+
+      <section class="result-section hidden" id="postmortem-panel">
+        <div class="explorer-header">
+          <h3 class="result-section-title">Post-mortem</h3>
+          <button id="close-postmortem-btn" class="ghost-btn" type="button">Close</button>
+        </div>
+        <div class="export-actions">
+          <button id="copy-summary-btn" class="ghost-btn" type="button">Copy summary</button>
+          <button id="copy-md-btn" class="ghost-btn" type="button">Copy Markdown</button>
+          <button id="export-md-btn" class="ghost-btn" type="button">Export Markdown</button>
+          <button id="export-json-btn" class="ghost-btn" type="button">Export JSON</button>
+        </div>
+        <article id="post-mortem-content" class="post-mortem-content"></article>
+      </section>
+    </div>
+  </main>
+
+  <div id="loading-overlay" class="loading-overlay hidden" role="dialog" aria-live="polite" aria-label="Investigation in progress">
+    <div class="loading-card">
+      <p class="loading-title">Investigating incident</p>
+      <p class="loading-subtitle" id="loading-subtitle">Analyzing workflow and evidence…</p>
+      <div class="loading-bar-track" aria-hidden="true">
+        <div class="loading-bar-fill"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

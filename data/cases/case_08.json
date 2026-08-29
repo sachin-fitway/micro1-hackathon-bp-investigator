@@ -1,0 +1,226 @@
+{
+  "case_id": "case_08",
+  "process_context": {
+    "process_name": "fintech_settlement",
+    "expected_sequence": [
+      "trade_match",
+      "aml_screening",
+      "settlement_batch",
+      "custodian_transfer"
+    ]
+  },
+  "raw_logs": [
+    {
+      "log_id": "c08-01",
+      "timestamp": "2026-03-12T17:00:00Z",
+      "service": "matching-engine",
+      "message": "Trade matched",
+      "metadata": {
+        "correlation_id": "txn-2218"
+      }
+    },
+    {
+      "log_id": "c08-02",
+      "timestamp": "2026-03-12T16:59:57Z",
+      "service": "aml-service",
+      "message": "Screening short-circuited",
+      "metadata": {
+        "correlation_id": "txn-2218",
+        "clock_skew_ms": 3000
+      }
+    },
+    {
+      "log_id": "c08-03",
+      "timestamp": "2026-03-12T17:00:02Z",
+      "service": "settlement-service",
+      "message": "Batch waiting for AML clearance",
+      "metadata": {
+        "correlation_id": "txn-2218"
+      }
+    },
+    {
+      "log_id": "c08-04",
+      "timestamp": "2026-03-12T17:00:05Z",
+      "service": "custodian-gateway",
+      "message": "Transfer timeout",
+      "metadata": {
+        "correlation_id": "txn-2218",
+        "level": "ERROR"
+      }
+    },
+    {
+      "log_id": "c08-05",
+      "timestamp": "2026-03-12T17:00:06Z",
+      "service": "support-bot",
+      "message": "Settlement delayed overnight",
+      "metadata": {
+        "correlation_id": "txn-2218"
+      }
+    },
+    {
+      "log_id": "c08-06",
+      "timestamp": "2026-03-12T17:00:01Z",
+      "service": "audit-service",
+      "message": "No AML clearance token issued",
+      "metadata": {
+        "correlation_id": "txn-2218",
+        "level": "DEBUG"
+      }
+    },
+    {
+      "log_id": "c08-07",
+      "timestamp": "2026-03-12T17:00:03Z",
+      "service": "fx-service",
+      "message": "FX rate locked",
+      "metadata": {
+        "correlation_id": "txn-2218"
+      }
+    },
+    {
+      "log_id": "c08-08",
+      "timestamp": "2026-03-12T17:00:04Z",
+      "service": "counterparty-service",
+      "message": "Limit headroom ok",
+      "metadata": {
+        "correlation_id": "txn-2218"
+      }
+    },
+    {
+      "log_id": "c08-09",
+      "timestamp": "2026-03-12T17:00:02Z",
+      "service": "risk-service",
+      "message": "Counterparty limit ok",
+      "metadata": {
+        "correlation_id": "txn-2218"
+      }
+    },
+    {
+      "log_id": "c08-10",
+      "timestamp": "2026-03-12T17:00:05Z",
+      "service": "edge-gateway",
+      "message": "Retry scheduled",
+      "metadata": {
+        "correlation_id": "txn-2218"
+      }
+    },
+    {
+      "log_id": "c08-11",
+      "timestamp": "2026-03-12T17:00:01Z",
+      "service": "market-data",
+      "message": "Reference price fetched",
+      "metadata": {
+        "correlation_id": "txn-2218"
+      }
+    },
+    {
+      "log_id": "c08-12",
+      "timestamp": "2026-03-12T17:00:03Z",
+      "service": "reg-reporting",
+      "message": "Trade report queued",
+      "metadata": {
+        "correlation_id": "txn-2218"
+      }
+    },
+    {
+      "log_id": "c08-n01",
+      "timestamp": "2026-03-12T17:00:00Z",
+      "service": "metrics-service",
+      "message": "Metric batch flushed",
+      "metadata": {
+        "correlation_id": "txn-2218",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c08-n02",
+      "timestamp": "2026-03-12T17:00:03Z",
+      "service": "cache-service",
+      "message": "Cache partition warmed",
+      "metadata": {
+        "correlation_id": "txn-2218",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c08-n03",
+      "timestamp": "2026-03-12T17:00:06Z",
+      "service": "cdn-service",
+      "message": "Edge POP health check ok",
+      "metadata": {
+        "correlation_id": "txn-2218",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c08-n04",
+      "timestamp": "2026-03-12T17:00:09Z",
+      "service": "feature-flag-service",
+      "message": "Flag evaluation cached",
+      "metadata": {
+        "correlation_id": "txn-2218",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c08-n05",
+      "timestamp": "2026-03-12T17:00:12Z",
+      "service": "session-service",
+      "message": "Session TTL refreshed",
+      "metadata": {
+        "correlation_id": "txn-2218",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c08-n06",
+      "timestamp": "2026-03-12T17:00:15Z",
+      "service": "rate-limiter",
+      "message": "Token bucket replenished",
+      "metadata": {
+        "correlation_id": "txn-2218",
+        "irrelevant": true
+      }
+    }
+  ],
+  "ground_truth": {
+    "divergence_step": "aml_screening",
+    "root_cause_category": "sequence_skip",
+    "culprit_log_ids": [
+      "c08-02",
+      "c08-06"
+    ],
+    "required_evidence_ids": [
+      "c08-02",
+      "c08-06",
+      "c08-03"
+    ],
+    "decoy_diagnosis": {
+      "decoy_type": "downstream_error_looks_like_root",
+      "divergence_step": "custodian_transfer",
+      "root_cause_category": "timeout_stall",
+      "culprit_log_ids": [
+        "c08-04"
+      ],
+      "decoy_evidence_ids": [
+        "c08-04",
+        "c08-05",
+        "c08-10"
+      ]
+    },
+    "acceptable_root_causes": []
+  },
+  "meta": {
+    "failure_pattern": "decoy_diagnosis",
+    "difficulty": "hard",
+    "baseline_hypothesis": "agent",
+    "domain": "fintech",
+    "difficulty_factors": {
+      "log_noise": 2,
+      "causal_distance": 3,
+      "competing_hypotheses": 2,
+      "evidence_dispersion": 3,
+      "metadata_conflict": 0,
+      "temporal_ambiguity": 3
+    }
+  }
+}

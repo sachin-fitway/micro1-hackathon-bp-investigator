@@ -1,0 +1,145 @@
+{
+  "case_id": "case_04",
+  "process_context": {
+    "process_name": "ecommerce_checkout",
+    "expected_sequence": [
+      "cart_validate",
+      "inventory_reserve",
+      "coupon_apply",
+      "payment_authorize"
+    ]
+  },
+  "raw_logs": [
+    {
+      "log_id": "c04-01",
+      "timestamp": "2026-03-12T13:00:00Z",
+      "service": "cart-service",
+      "message": "Cart validated",
+      "metadata": {
+        "correlation_id": "ord-6601"
+      }
+    },
+    {
+      "log_id": "c04-02",
+      "timestamp": "2026-03-12T13:00:01Z",
+      "service": "inventory-service",
+      "message": "Reservation delayed: warehouse sync pending",
+      "metadata": {
+        "correlation_id": "ord-6601"
+      }
+    },
+    {
+      "log_id": "c04-03",
+      "timestamp": "2026-03-12T13:00:02Z",
+      "service": "coupon-service",
+      "message": "Coupon rejected silently: campaign expired",
+      "metadata": {
+        "correlation_id": "ord-6601",
+        "coupon_status": "ignored"
+      }
+    },
+    {
+      "log_id": "c04-04",
+      "timestamp": "2026-03-12T13:00:03Z",
+      "service": "payment-gateway",
+      "message": "Authorization failed: price mismatch",
+      "metadata": {
+        "correlation_id": "ord-6601"
+      }
+    },
+    {
+      "log_id": "c04-05",
+      "timestamp": "2026-03-12T13:00:04Z",
+      "service": "inventory-service",
+      "message": "Reservation completed after payment window",
+      "metadata": {
+        "correlation_id": "ord-6601"
+      }
+    },
+    {
+      "log_id": "c04-06",
+      "timestamp": "2026-03-12T13:00:05Z",
+      "service": "support-bot",
+      "message": "Checkout failed at payment",
+      "metadata": {
+        "correlation_id": "ord-6601"
+      }
+    },
+    {
+      "log_id": "c04-07",
+      "timestamp": "2026-03-12T13:00:01Z",
+      "service": "audit-service",
+      "message": "Promo code present on cart",
+      "metadata": {
+        "correlation_id": "ord-6601"
+      }
+    },
+    {
+      "log_id": "c04-08",
+      "timestamp": "2026-03-12T13:00:02Z",
+      "service": "fraud-service",
+      "message": "Risk check passed",
+      "metadata": {
+        "correlation_id": "ord-6601"
+      }
+    },
+    {
+      "log_id": "c04-n01",
+      "timestamp": "2026-03-12T13:00:00Z",
+      "service": "metrics-service",
+      "message": "Metric batch flushed",
+      "metadata": {
+        "correlation_id": "ord-6601",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c04-n02",
+      "timestamp": "2026-03-12T13:00:03Z",
+      "service": "cache-service",
+      "message": "Cache partition warmed",
+      "metadata": {
+        "correlation_id": "ord-6601",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c04-n03",
+      "timestamp": "2026-03-12T13:00:06Z",
+      "service": "cdn-service",
+      "message": "Edge POP health check ok",
+      "metadata": {
+        "correlation_id": "ord-6601",
+        "irrelevant": true
+      }
+    }
+  ],
+  "ground_truth": {
+    "divergence_step": "coupon_apply",
+    "root_cause_category": "config_drift",
+    "culprit_log_ids": [
+      "c04-03"
+    ],
+    "required_evidence_ids": [
+      "c04-03",
+      "c04-04",
+      "c04-07"
+    ],
+    "decoy_diagnosis": null,
+    "acceptable_root_causes": []
+  },
+  "meta": {
+    "failure_pattern": "multiple_plausible_causes",
+    "difficulty": "standard",
+    "baseline_hypothesis": "baseline",
+    "domain": "ecommerce",
+    "difficulty_factors": {
+      "log_noise": 1,
+      "causal_distance": 1,
+      "competing_hypotheses": 2,
+      "evidence_dispersion": 1,
+      "metadata_conflict": 1,
+      "temporal_ambiguity": 0
+    }
+  }
+}

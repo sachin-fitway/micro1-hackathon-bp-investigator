@@ -1,0 +1,149 @@
+{
+  "case_id": "case_22",
+  "process_context": {
+    "process_name": "hr_employee_onboarding",
+    "expected_sequence": [
+      "offer_accept",
+      "background_check",
+      "account_provision",
+      "badge_issue"
+    ]
+  },
+  "raw_logs": [
+    {
+      "log_id": "c22-01",
+      "timestamp": "2026-04-02T15:00:00Z",
+      "service": "offer-service",
+      "message": "Offer accepted",
+      "metadata": {
+        "correlation_id": "hr-3309"
+      }
+    },
+    {
+      "log_id": "c22-02",
+      "timestamp": "2026-04-02T15:00:01Z",
+      "service": "background-service",
+      "message": "Background check cleared",
+      "metadata": {
+        "correlation_id": "hr-3309",
+        "check_status": "pending_vendor",
+        "report_ready": false
+      }
+    },
+    {
+      "log_id": "c22-03",
+      "timestamp": "2026-04-02T15:00:02Z",
+      "service": "it-provisioning",
+      "message": "Account creation skipped: clearance not verified",
+      "metadata": {
+        "correlation_id": "hr-3309"
+      }
+    },
+    {
+      "log_id": "c22-04",
+      "timestamp": "2026-04-02T15:00:03Z",
+      "service": "badge-service",
+      "message": "Badge not issued",
+      "metadata": {
+        "correlation_id": "hr-3309"
+      }
+    },
+    {
+      "log_id": "c22-05",
+      "timestamp": "2026-04-02T15:00:04Z",
+      "service": "support-bot",
+      "message": "New hire cannot access systems",
+      "metadata": {
+        "correlation_id": "hr-3309"
+      }
+    },
+    {
+      "log_id": "c22-06",
+      "timestamp": "2026-04-02T15:00:01Z",
+      "service": "vendor-api",
+      "message": "Vendor report still queued",
+      "metadata": {
+        "correlation_id": "hr-3309",
+        "level": "DEBUG"
+      }
+    },
+    {
+      "log_id": "c22-07",
+      "timestamp": "2026-04-02T15:00:02Z",
+      "service": "hris-sync",
+      "message": "Employee record created prematurely",
+      "metadata": {
+        "correlation_id": "hr-3309"
+      }
+    },
+    {
+      "log_id": "c22-n01",
+      "timestamp": "2026-03-12T15:00:00Z",
+      "service": "metrics-service",
+      "message": "Metric batch flushed",
+      "metadata": {
+        "correlation_id": "hr-3309",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c22-n02",
+      "timestamp": "2026-03-12T15:00:03Z",
+      "service": "cache-service",
+      "message": "Cache partition warmed",
+      "metadata": {
+        "correlation_id": "hr-3309",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c22-n03",
+      "timestamp": "2026-03-12T15:00:06Z",
+      "service": "cdn-service",
+      "message": "Edge POP health check ok",
+      "metadata": {
+        "correlation_id": "hr-3309",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c22-n04",
+      "timestamp": "2026-03-12T15:00:09Z",
+      "service": "feature-flag-service",
+      "message": "Flag evaluation cached",
+      "metadata": {
+        "correlation_id": "hr-3309",
+        "irrelevant": true
+      }
+    }
+  ],
+  "ground_truth": {
+    "divergence_step": "background_check",
+    "root_cause_category": "false_success_signal",
+    "culprit_log_ids": [
+      "c22-02",
+      "c22-06"
+    ],
+    "required_evidence_ids": [
+      "c22-02",
+      "c22-06",
+      "c22-03"
+    ],
+    "decoy_diagnosis": null,
+    "acceptable_root_causes": []
+  },
+  "meta": {
+    "failure_pattern": "silent_divergence",
+    "difficulty": "hard",
+    "baseline_hypothesis": "either",
+    "domain": "b2b_saas",
+    "difficulty_factors": {
+      "log_noise": 2,
+      "causal_distance": 2,
+      "competing_hypotheses": 1,
+      "evidence_dispersion": 2,
+      "metadata_conflict": 3,
+      "temporal_ambiguity": 0
+    }
+  }
+}

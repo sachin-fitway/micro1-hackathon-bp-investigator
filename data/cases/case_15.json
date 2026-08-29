@@ -1,0 +1,253 @@
+{
+  "case_id": "case_15",
+  "process_context": {
+    "process_name": "b2b_saas_entitlement_provisioning",
+    "expected_sequence": [
+      "contract_signed",
+      "entitlement_sync",
+      "tenant_provision",
+      "seat_activate"
+    ]
+  },
+  "raw_logs": [
+    {
+      "log_id": "c15-01",
+      "timestamp": "2026-03-13T08:00:00Z",
+      "service": "contract-service",
+      "message": "Contract signed for tenant T-4421",
+      "metadata": {
+        "correlation_id": "prov-3310"
+      }
+    },
+    {
+      "log_id": "c15-02",
+      "timestamp": "2026-03-13T08:00:01Z",
+      "service": "entitlement-service",
+      "message": "Entitlement hash mismatch: expected v3, cache v2",
+      "metadata": {
+        "correlation_id": "prov-3310",
+        "level": "DEBUG"
+      }
+    },
+    {
+      "log_id": "c15-03",
+      "timestamp": "2026-03-13T08:00:02Z",
+      "service": "provision-worker",
+      "message": "Tenant provisioning complete for tenant T-4421",
+      "metadata": {
+        "correlation_id": "prov-3310",
+        "provision_state": "deferred"
+      }
+    },
+    {
+      "log_id": "c15-04",
+      "timestamp": "2026-03-13T08:00:03Z",
+      "service": "seat-service",
+      "message": "Seat activation skipped: entitlement not ready",
+      "metadata": {
+        "correlation_id": "prov-3310"
+      }
+    },
+    {
+      "log_id": "c15-05",
+      "timestamp": "2026-03-13T08:00:04Z",
+      "service": "support-bot",
+      "message": "Customer says seats never activated",
+      "metadata": {
+        "correlation_id": "prov-3310"
+      }
+    },
+    {
+      "log_id": "c15-06",
+      "timestamp": "2026-03-13T08:00:01Z",
+      "service": "audit-service",
+      "message": "Contract event not observed by entitlement service",
+      "metadata": {
+        "correlation_id": "prov-3310"
+      }
+    },
+    {
+      "log_id": "c15-07",
+      "timestamp": "2026-03-13T08:00:02Z",
+      "service": "notification-service",
+      "message": "Provisioning success email sent",
+      "metadata": {
+        "correlation_id": "prov-3310"
+      }
+    },
+    {
+      "log_id": "c15-08",
+      "timestamp": "2026-03-13T08:00:03Z",
+      "service": "billing-service",
+      "message": "Subscription marked active",
+      "metadata": {
+        "correlation_id": "prov-3310"
+      }
+    },
+    {
+      "log_id": "c15-09",
+      "timestamp": "2026-03-13T08:00:00Z",
+      "service": "edge-gateway",
+      "message": "Provisioning workflow accepted",
+      "metadata": {
+        "correlation_id": "prov-3310"
+      }
+    },
+    {
+      "log_id": "c15-10",
+      "timestamp": "2026-03-13T08:00:04Z",
+      "service": "ops-bot",
+      "message": "No error alerts raised",
+      "metadata": {
+        "correlation_id": "prov-3310"
+      }
+    },
+    {
+      "log_id": "c15-11",
+      "timestamp": "2026-03-13T08:00:02Z",
+      "service": "health-service",
+      "message": "All dependency checks green",
+      "metadata": {
+        "correlation_id": "prov-3310"
+      }
+    },
+    {
+      "log_id": "c15-12",
+      "timestamp": "2026-03-13T08:00:03Z",
+      "service": "crm-sync",
+      "message": "Account status synced as active",
+      "metadata": {
+        "correlation_id": "prov-3310"
+      }
+    },
+    {
+      "log_id": "c15-13",
+      "timestamp": "2026-03-13T08:00:01Z",
+      "service": "contract-service",
+      "message": "Contract PDF archived",
+      "metadata": {
+        "correlation_id": "prov-3310"
+      }
+    },
+    {
+      "log_id": "c15-14",
+      "timestamp": "2026-03-13T08:00:02Z",
+      "service": "analytics-service",
+      "message": "Activation funnel silent drop",
+      "metadata": {
+        "correlation_id": "prov-3310"
+      }
+    },
+    {
+      "log_id": "c15-15",
+      "timestamp": "2026-03-13T08:00:03Z",
+      "service": "license-service",
+      "message": "License count unchanged",
+      "metadata": {
+        "correlation_id": "prov-3310",
+        "level": "DEBUG"
+      }
+    },
+    {
+      "log_id": "c15-n01",
+      "timestamp": "2026-03-12T08:00:00Z",
+      "service": "metrics-service",
+      "message": "Metric batch flushed",
+      "metadata": {
+        "correlation_id": "prov-3310",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c15-n02",
+      "timestamp": "2026-03-12T08:00:03Z",
+      "service": "cache-service",
+      "message": "Cache partition warmed",
+      "metadata": {
+        "correlation_id": "prov-3310",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c15-n03",
+      "timestamp": "2026-03-12T08:00:06Z",
+      "service": "cdn-service",
+      "message": "Edge POP health check ok",
+      "metadata": {
+        "correlation_id": "prov-3310",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c15-n04",
+      "timestamp": "2026-03-12T08:00:09Z",
+      "service": "feature-flag-service",
+      "message": "Flag evaluation cached",
+      "metadata": {
+        "correlation_id": "prov-3310",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c15-n05",
+      "timestamp": "2026-03-12T08:00:12Z",
+      "service": "session-service",
+      "message": "Session TTL refreshed",
+      "metadata": {
+        "correlation_id": "prov-3310",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c15-n06",
+      "timestamp": "2026-03-12T08:00:15Z",
+      "service": "rate-limiter",
+      "message": "Token bucket replenished",
+      "metadata": {
+        "correlation_id": "prov-3310",
+        "irrelevant": true
+      }
+    }
+  ],
+  "ground_truth": {
+    "divergence_step": "entitlement_sync",
+    "root_cause_category": "entitlement_mismatch",
+    "culprit_log_ids": [
+      "c15-02"
+    ],
+    "required_evidence_ids": [
+      "c15-02",
+      "c15-03",
+      "c15-06",
+      "c15-15"
+    ],
+    "decoy_diagnosis": {
+      "decoy_type": "success_message_contradicts_metadata",
+      "divergence_step": "tenant_provision",
+      "root_cause_category": "false_success_signal",
+      "culprit_log_ids": [
+        "c15-03"
+      ],
+      "decoy_evidence_ids": [
+        "c15-03",
+        "c15-07",
+        "c15-11"
+      ]
+    },
+    "acceptable_root_causes": []
+  },
+  "meta": {
+    "failure_pattern": "silent_divergence",
+    "difficulty": "hard",
+    "baseline_hypothesis": "agent",
+    "domain": "b2b_saas",
+    "difficulty_factors": {
+      "log_noise": 3,
+      "causal_distance": 3,
+      "competing_hypotheses": 2,
+      "evidence_dispersion": 3,
+      "metadata_conflict": 3,
+      "temporal_ambiguity": 1
+    }
+  }
+}

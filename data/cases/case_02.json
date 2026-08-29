@@ -1,0 +1,155 @@
+{
+  "case_id": "case_02",
+  "process_context": {
+    "process_name": "ecommerce_checkout",
+    "expected_sequence": [
+      "cart_validate",
+      "inventory_reserve",
+      "payment_authorize",
+      "order_confirm"
+    ]
+  },
+  "raw_logs": [
+    {
+      "log_id": "c02-08",
+      "timestamp": "2026-03-12T11:00:07Z",
+      "service": "order-service",
+      "message": "Order confirmation missing prior authorization",
+      "metadata": {
+        "correlation_id": "ord-9021"
+      }
+    },
+    {
+      "log_id": "c02-03",
+      "timestamp": "2026-03-12T11:00:02Z",
+      "service": "inventory-service",
+      "message": "Inventory reserved",
+      "metadata": {
+        "correlation_id": "ord-9021"
+      }
+    },
+    {
+      "log_id": "c02-01",
+      "timestamp": "2026-03-12T11:00:00Z",
+      "service": "cart-service",
+      "message": "Cart validated",
+      "metadata": {
+        "correlation_id": "ord-9021"
+      }
+    },
+    {
+      "log_id": "c02-06",
+      "timestamp": "2026-03-12T11:00:05Z",
+      "service": "payment-gateway",
+      "message": "Authorization succeeded",
+      "metadata": {
+        "correlation_id": "ord-9021"
+      }
+    },
+    {
+      "log_id": "c02-04",
+      "timestamp": "2026-03-12T11:00:03Z",
+      "service": "payment-gateway",
+      "message": "Authorization request received",
+      "metadata": {
+        "correlation_id": "ord-9021"
+      }
+    },
+    {
+      "log_id": "c02-07",
+      "timestamp": "2026-03-12T11:00:06Z",
+      "service": "order-service",
+      "message": "Confirm step invoked without auth token",
+      "metadata": {
+        "correlation_id": "ord-9021"
+      }
+    },
+    {
+      "log_id": "c02-02",
+      "timestamp": "2026-03-12T11:00:01Z",
+      "service": "audit-service",
+      "message": "Checkout started",
+      "metadata": {
+        "correlation_id": "ord-9021"
+      }
+    },
+    {
+      "log_id": "c02-05",
+      "timestamp": "2026-03-12T11:00:04Z",
+      "service": "fraud-service",
+      "message": "Risk check passed",
+      "metadata": {
+        "correlation_id": "ord-9021"
+      }
+    },
+    {
+      "log_id": "c02-n01",
+      "timestamp": "2026-03-12T11:00:00Z",
+      "service": "metrics-service",
+      "message": "Metric batch flushed",
+      "metadata": {
+        "correlation_id": "ord-9021",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c02-n02",
+      "timestamp": "2026-03-12T11:00:03Z",
+      "service": "cache-service",
+      "message": "Cache partition warmed",
+      "metadata": {
+        "correlation_id": "ord-9021",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c02-n03",
+      "timestamp": "2026-03-12T11:00:06Z",
+      "service": "cdn-service",
+      "message": "Edge POP health check ok",
+      "metadata": {
+        "correlation_id": "ord-9021",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c02-n04",
+      "timestamp": "2026-03-12T11:00:09Z",
+      "service": "feature-flag-service",
+      "message": "Flag evaluation cached",
+      "metadata": {
+        "correlation_id": "ord-9021",
+        "irrelevant": true
+      }
+    }
+  ],
+  "ground_truth": {
+    "divergence_step": "order_confirm",
+    "root_cause_category": "sequence_skip",
+    "culprit_log_ids": [
+      "c02-07",
+      "c02-08"
+    ],
+    "required_evidence_ids": [
+      "c02-06",
+      "c02-07",
+      "c02-08"
+    ],
+    "decoy_diagnosis": null,
+    "acceptable_root_causes": []
+  },
+  "meta": {
+    "failure_pattern": "out_of_order_delivery",
+    "difficulty": "standard",
+    "baseline_hypothesis": "either",
+    "domain": "ecommerce",
+    "difficulty_factors": {
+      "log_noise": 1,
+      "causal_distance": 1,
+      "competing_hypotheses": 1,
+      "evidence_dispersion": 2,
+      "metadata_conflict": 0,
+      "temporal_ambiguity": 2
+    }
+  }
+}

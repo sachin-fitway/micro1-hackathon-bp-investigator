@@ -1,0 +1,225 @@
+{
+  "case_id": "case_10",
+  "process_context": {
+    "process_name": "fintech_merchant_settlement",
+    "expected_sequence": [
+      "kyc_verify",
+      "batch_close",
+      "webhook_dispatch",
+      "ledger_credit"
+    ]
+  },
+  "raw_logs": [
+    {
+      "log_id": "c10-01",
+      "timestamp": "2026-03-12T19:00:00Z",
+      "service": "kyc-service",
+      "message": "Verification bypassed for renewal window",
+      "metadata": {
+        "correlation_id": "txn-9903"
+      }
+    },
+    {
+      "log_id": "c10-02",
+      "timestamp": "2026-03-12T19:00:01Z",
+      "service": "batch-service",
+      "message": "Batch closed",
+      "metadata": {
+        "correlation_id": "txn-9903"
+      }
+    },
+    {
+      "log_id": "c10-03",
+      "timestamp": "2026-03-12T19:00:02Z",
+      "service": "webhook-service",
+      "message": "Dispatch deferred pending KYC token",
+      "metadata": {
+        "correlation_id": "txn-9903"
+      }
+    },
+    {
+      "log_id": "c10-04",
+      "timestamp": "2026-03-12T19:00:05Z",
+      "service": "webhook-service",
+      "message": "Dispatch timeout after retries",
+      "metadata": {
+        "correlation_id": "txn-9903",
+        "level": "ERROR"
+      }
+    },
+    {
+      "log_id": "c10-05",
+      "timestamp": "2026-03-12T19:00:06Z",
+      "service": "ledger-service",
+      "message": "Credit missing",
+      "metadata": {
+        "correlation_id": "txn-9903"
+      }
+    },
+    {
+      "log_id": "c10-06",
+      "timestamp": "2026-03-12T19:00:01Z",
+      "service": "audit-service",
+      "message": "KYC token absent",
+      "metadata": {
+        "correlation_id": "txn-9903",
+        "level": "DEBUG"
+      }
+    },
+    {
+      "log_id": "c10-07",
+      "timestamp": "2026-03-12T19:00:04Z",
+      "service": "support-bot",
+      "message": "Merchant settlement delayed",
+      "metadata": {
+        "correlation_id": "txn-9903"
+      }
+    },
+    {
+      "log_id": "c10-08",
+      "timestamp": "2026-03-12T19:00:03Z",
+      "service": "reconciliation-service",
+      "message": "Batch totals balanced",
+      "metadata": {
+        "correlation_id": "txn-9903"
+      }
+    },
+    {
+      "log_id": "c10-09",
+      "timestamp": "2026-03-12T19:00:02Z",
+      "service": "risk-service",
+      "message": "Merchant tier stable",
+      "metadata": {
+        "correlation_id": "txn-9903"
+      }
+    },
+    {
+      "log_id": "c10-10",
+      "timestamp": "2026-03-12T19:00:05Z",
+      "service": "partner-ledger",
+      "message": "Partner ACK not received",
+      "metadata": {
+        "correlation_id": "txn-9903"
+      }
+    },
+    {
+      "log_id": "c10-11",
+      "timestamp": "2026-03-12T19:00:04Z",
+      "service": "analytics-service",
+      "message": "Webhook retry budget exhausted",
+      "metadata": {
+        "correlation_id": "txn-9903"
+      }
+    },
+    {
+      "log_id": "c10-12",
+      "timestamp": "2026-03-12T19:00:03Z",
+      "service": "ops-dashboard",
+      "message": "Settlement queue depth nominal",
+      "metadata": {
+        "correlation_id": "txn-9903"
+      }
+    },
+    {
+      "log_id": "c10-n01",
+      "timestamp": "2026-03-12T19:00:00Z",
+      "service": "metrics-service",
+      "message": "Metric batch flushed",
+      "metadata": {
+        "correlation_id": "txn-9903",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c10-n02",
+      "timestamp": "2026-03-12T19:00:03Z",
+      "service": "cache-service",
+      "message": "Cache partition warmed",
+      "metadata": {
+        "correlation_id": "txn-9903",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c10-n03",
+      "timestamp": "2026-03-12T19:00:06Z",
+      "service": "cdn-service",
+      "message": "Edge POP health check ok",
+      "metadata": {
+        "correlation_id": "txn-9903",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c10-n04",
+      "timestamp": "2026-03-12T19:00:09Z",
+      "service": "feature-flag-service",
+      "message": "Flag evaluation cached",
+      "metadata": {
+        "correlation_id": "txn-9903",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c10-n05",
+      "timestamp": "2026-03-12T19:00:12Z",
+      "service": "session-service",
+      "message": "Session TTL refreshed",
+      "metadata": {
+        "correlation_id": "txn-9903",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c10-n06",
+      "timestamp": "2026-03-12T19:00:15Z",
+      "service": "rate-limiter",
+      "message": "Token bucket replenished",
+      "metadata": {
+        "correlation_id": "txn-9903",
+        "irrelevant": true
+      }
+    }
+  ],
+  "ground_truth": {
+    "divergence_step": "kyc_verify",
+    "root_cause_category": "sequence_skip",
+    "culprit_log_ids": [
+      "c10-01",
+      "c10-06"
+    ],
+    "required_evidence_ids": [
+      "c10-01",
+      "c10-06",
+      "c10-03"
+    ],
+    "decoy_diagnosis": {
+      "decoy_type": "downstream_error_looks_like_root",
+      "divergence_step": "webhook_dispatch",
+      "root_cause_category": "timeout_stall",
+      "culprit_log_ids": [
+        "c10-04"
+      ],
+      "decoy_evidence_ids": [
+        "c10-04",
+        "c10-07",
+        "c10-11"
+      ]
+    },
+    "acceptable_root_causes": []
+  },
+  "meta": {
+    "failure_pattern": "decoy_diagnosis",
+    "difficulty": "hard",
+    "baseline_hypothesis": "agent",
+    "domain": "fintech",
+    "difficulty_factors": {
+      "log_noise": 2,
+      "causal_distance": 3,
+      "competing_hypotheses": 2,
+      "evidence_dispersion": 3,
+      "metadata_conflict": 0,
+      "temporal_ambiguity": 1
+    }
+  }
+}

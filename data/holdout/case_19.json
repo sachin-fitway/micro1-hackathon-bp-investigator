@@ -1,0 +1,129 @@
+{
+  "case_id": "case_19",
+  "process_context": {
+    "process_name": "manufacturing_batch_qc",
+    "expected_sequence": [
+      "batch_start",
+      "recipe_load",
+      "mix_execute",
+      "qc_release"
+    ]
+  },
+  "raw_logs": [
+    {
+      "log_id": "c19-01",
+      "timestamp": "2026-04-02T12:00:00Z",
+      "service": "batch-service",
+      "message": "Batch started",
+      "metadata": {
+        "correlation_id": "bat-2208"
+      }
+    },
+    {
+      "log_id": "c19-02",
+      "timestamp": "2026-04-02T12:00:01Z",
+      "service": "recipe-service",
+      "message": "Recipe v7 loaded; spec requires v9",
+      "metadata": {
+        "correlation_id": "bat-2208",
+        "recipe_version": "7",
+        "required_version": "9"
+      }
+    },
+    {
+      "log_id": "c19-03",
+      "timestamp": "2026-04-02T12:00:02Z",
+      "service": "mixer-service",
+      "message": "Mix completed with wrong viscosity",
+      "metadata": {
+        "correlation_id": "bat-2208"
+      }
+    },
+    {
+      "log_id": "c19-04",
+      "timestamp": "2026-04-02T12:00:03Z",
+      "service": "qc-service",
+      "message": "QC hold: viscosity out of range",
+      "metadata": {
+        "correlation_id": "bat-2208"
+      }
+    },
+    {
+      "log_id": "c19-05",
+      "timestamp": "2026-04-02T12:00:04Z",
+      "service": "ops-alert",
+      "message": "Line stopped",
+      "metadata": {
+        "correlation_id": "bat-2208"
+      }
+    },
+    {
+      "log_id": "c19-06",
+      "timestamp": "2026-04-02T12:00:01Z",
+      "service": "config-service",
+      "message": "Plant default recipe map stale",
+      "metadata": {
+        "correlation_id": "bat-2208"
+      }
+    },
+    {
+      "log_id": "c19-n01",
+      "timestamp": "2026-03-12T12:00:00Z",
+      "service": "metrics-service",
+      "message": "Metric batch flushed",
+      "metadata": {
+        "correlation_id": "bat-2208",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c19-n02",
+      "timestamp": "2026-03-12T12:00:03Z",
+      "service": "cache-service",
+      "message": "Cache partition warmed",
+      "metadata": {
+        "correlation_id": "bat-2208",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c19-n03",
+      "timestamp": "2026-03-12T12:00:06Z",
+      "service": "cdn-service",
+      "message": "Edge POP health check ok",
+      "metadata": {
+        "correlation_id": "bat-2208",
+        "irrelevant": true
+      }
+    }
+  ],
+  "ground_truth": {
+    "divergence_step": "recipe_load",
+    "root_cause_category": "config_drift",
+    "culprit_log_ids": [
+      "c19-02",
+      "c19-06"
+    ],
+    "required_evidence_ids": [
+      "c19-02",
+      "c19-06",
+      "c19-04"
+    ],
+    "decoy_diagnosis": null,
+    "acceptable_root_causes": []
+  },
+  "meta": {
+    "failure_pattern": "multiple_plausible_causes",
+    "difficulty": "standard",
+    "baseline_hypothesis": "baseline",
+    "domain": "b2b_saas",
+    "difficulty_factors": {
+      "log_noise": 1,
+      "causal_distance": 1,
+      "competing_hypotheses": 1,
+      "evidence_dispersion": 1,
+      "metadata_conflict": 1,
+      "temporal_ambiguity": 0
+    }
+  }
+}

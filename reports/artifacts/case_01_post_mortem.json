@@ -1,0 +1,66 @@
+{
+  "case_id": "case_01",
+  "investigation_stage": 3,
+  "diagnosis": {
+    "divergence_step": "inventory_reserve",
+    "root_cause_category": "sequence_skip",
+    "culprit_log_ids": [
+      "c01-02"
+    ],
+    "evidence_log_ids": [
+      "c01-02",
+      "c01-03"
+    ],
+    "explanation": "Reservation skipped."
+  },
+  "retrieved_evidence_log_ids": [
+    "c01-02",
+    "c01-03"
+  ],
+  "retrieved_culprit_log_ids": [
+    "c01-02",
+    "c01-03"
+  ],
+  "unknown_log_ids": [],
+  "claim_traces": [
+    {
+      "claim": "Process diverged at step 'inventory_reserve'",
+      "supporting_log_ids": [
+        "c01-02"
+      ],
+      "source": "diagnosis"
+    },
+    {
+      "claim": "Root cause category is 'sequence_skip'",
+      "supporting_log_ids": [
+        "c01-02",
+        "c01-03"
+      ],
+      "source": "diagnosis"
+    },
+    {
+      "claim": "Diagnostic explanation: Reservation skipped.",
+      "supporting_log_ids": [
+        "c01-02",
+        "c01-03"
+      ],
+      "source": "diagnosis"
+    },
+    {
+      "claim": "Culprit anchor \u2014 inventory-service: Reservation skipped: legacy fast-path enabled",
+      "supporting_log_ids": [
+        "c01-02"
+      ],
+      "source": "diagnosis"
+    },
+    {
+      "claim": "Supporting evidence \u2014 payment-gateway: Authorization failed: no active reservation",
+      "supporting_log_ids": [
+        "c01-03"
+      ],
+      "source": "diagnosis"
+    }
+  ],
+  "evidence_table_markdown": "## Evidence\n\n| Log ID | Timestamp | Service | Message | Role |\n|--------|-----------|---------|---------|------|\n| c01-02 | 2026-03-12T10:00:03Z | inventory-service | Reservation skipped: legacy fast-path enabled | culprit + evidence |\n| c01-03 | 2026-03-12T10:00:05Z | payment-gateway | Authorization failed: no active reservation | evidence |",
+  "report_path": "/private/var/folders/pt/_kj3j02n4tz39sbk2517_tmh0000gn/T/pytest-of-sachinrai/pytest-38/testIncidentFlowArtifactJsonCo0/case_01_post_mortem.md"
+}

@@ -1,0 +1,78 @@
+{
+  "case_id": "case_14",
+  "investigation_stage": 3,
+  "diagnosis": {
+    "divergence_step": "usage_aggregate",
+    "root_cause_category": "false_success_signal",
+    "culprit_log_ids": [
+      "c14-02"
+    ],
+    "evidence_log_ids": [
+      "c14-02",
+      "c14-05",
+      "c14-08"
+    ],
+    "explanation": "The 'usage_aggregate' step reported 'Aggregation complete' (c14-02), which is a success signal. However, the metadata within the same log entry explicitly states 'billing_state': 'skipped'. This indicates a false success signal, as the aggregation step did not perform its intended function of preparing data for billing, leading to the customer being billed the wrong amount (c14-05) and the invoice remaining in a 'draft_only' state (c14-08) despite being 'generated' and 'emailed'."
+  },
+  "retrieved_evidence_log_ids": [
+    "c14-02",
+    "c14-05",
+    "c14-08"
+  ],
+  "retrieved_culprit_log_ids": [
+    "c14-02",
+    "c14-05",
+    "c14-08"
+  ],
+  "unknown_log_ids": [],
+  "claim_traces": [
+    {
+      "claim": "Process diverged at step 'usage_aggregate'",
+      "supporting_log_ids": [
+        "c14-02"
+      ],
+      "source": "diagnosis"
+    },
+    {
+      "claim": "Root cause category is 'false_success_signal'",
+      "supporting_log_ids": [
+        "c14-02",
+        "c14-05",
+        "c14-08"
+      ],
+      "source": "diagnosis"
+    },
+    {
+      "claim": "Diagnostic explanation: The 'usage_aggregate' step reported 'Aggregation complete' (c14-02), which is a success signal. However, the metadata within the same log entry explicitly states 'billing_state': 'skipped'. This indicates a false success signal, as the aggregation step did not perform its intended function of preparing data for billing, leading to the customer being billed the wrong amount (c14-05) and the invoice remaining in a 'draft_only' state (c14-08) despite being 'generated' and 'emailed'.",
+      "supporting_log_ids": [
+        "c14-02",
+        "c14-05",
+        "c14-08"
+      ],
+      "source": "diagnosis"
+    },
+    {
+      "claim": "Culprit anchor \u2014 aggregate-service: Aggregation complete",
+      "supporting_log_ids": [
+        "c14-02"
+      ],
+      "source": "diagnosis"
+    },
+    {
+      "claim": "Supporting evidence \u2014 support-bot: Customer billed wrong amount",
+      "supporting_log_ids": [
+        "c14-05"
+      ],
+      "source": "diagnosis"
+    },
+    {
+      "claim": "Supporting evidence \u2014 billing-service: Invoice total matches generated PDF",
+      "supporting_log_ids": [
+        "c14-08"
+      ],
+      "source": "diagnosis"
+    }
+  ],
+  "evidence_table_markdown": "## Evidence Table\n\n| Log ID | Timestamp | Service | Message | Role |\n|--------|-----------|---------|---------|------|\n| c14-02 | 2026-03-12T23:00:01Z | aggregate-service | Aggregation complete | culprit + evidence |\n| c14-05 | 2026-03-12T23:00:04Z | support-bot | Customer billed wrong amount | evidence |\n| c14-08 | 2026-03-12T23:00:03Z | billing-service | Invoice total matches generated PDF | evidence |",
+  "report_path": "/Users/sachinrai/StudioProjects/micro1-hackathon-bp-investigator/reports/case_14_post_mortem.md"
+}

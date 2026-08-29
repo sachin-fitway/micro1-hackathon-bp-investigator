@@ -1,0 +1,144 @@
+{
+  "case_id": "case_01",
+  "process_context": {
+    "process_name": "ecommerce_checkout",
+    "expected_sequence": [
+      "cart_validate",
+      "inventory_reserve",
+      "payment_authorize",
+      "order_confirm"
+    ]
+  },
+  "raw_logs": [
+    {
+      "log_id": "c01-01",
+      "timestamp": "2026-03-12T10:00:01Z",
+      "service": "cart-service",
+      "message": "Cart validated",
+      "metadata": {
+        "correlation_id": "ord-8812"
+      }
+    },
+    {
+      "log_id": "c01-02",
+      "timestamp": "2026-03-12T10:00:03Z",
+      "service": "inventory-service",
+      "message": "Reservation skipped: legacy fast-path enabled",
+      "metadata": {
+        "correlation_id": "ord-8812",
+        "reservation_status": "skipped"
+      }
+    },
+    {
+      "log_id": "c01-03",
+      "timestamp": "2026-03-12T10:00:05Z",
+      "service": "payment-gateway",
+      "message": "Authorization failed: no active reservation",
+      "metadata": {
+        "correlation_id": "ord-8812"
+      }
+    },
+    {
+      "log_id": "c01-04",
+      "timestamp": "2026-03-12T10:00:06Z",
+      "service": "cart-service",
+      "message": "Checkout aborted",
+      "metadata": {
+        "correlation_id": "ord-8812"
+      }
+    },
+    {
+      "log_id": "c01-05",
+      "timestamp": "2026-03-12T10:00:02Z",
+      "service": "audit-service",
+      "message": "Checkout session opened",
+      "metadata": {
+        "correlation_id": "ord-8812"
+      }
+    },
+    {
+      "log_id": "c01-07",
+      "timestamp": "2026-03-12T10:00:07Z",
+      "service": "support-bot",
+      "message": "Customer reported cart timeout",
+      "metadata": {
+        "correlation_id": "ord-8812"
+      }
+    },
+    {
+      "log_id": "c01-08",
+      "timestamp": "2026-03-12T10:00:01Z",
+      "service": "edge-gateway",
+      "message": "Request accepted",
+      "metadata": {
+        "correlation_id": "ord-8812"
+      }
+    },
+    {
+      "log_id": "c01-09",
+      "timestamp": "2026-03-12T10:00:05Z",
+      "service": "fraud-service",
+      "message": "Risk check passed",
+      "metadata": {
+        "correlation_id": "ord-8812"
+      }
+    },
+    {
+      "log_id": "c01-n01",
+      "timestamp": "2026-03-12T10:00:00Z",
+      "service": "metrics-service",
+      "message": "Metric batch flushed",
+      "metadata": {
+        "correlation_id": "ord-8812",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c01-n02",
+      "timestamp": "2026-03-12T10:00:03Z",
+      "service": "cache-service",
+      "message": "Cache partition warmed",
+      "metadata": {
+        "correlation_id": "ord-8812",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c01-n03",
+      "timestamp": "2026-03-12T10:00:06Z",
+      "service": "cdn-service",
+      "message": "Edge POP health check ok",
+      "metadata": {
+        "correlation_id": "ord-8812",
+        "irrelevant": true
+      }
+    }
+  ],
+  "ground_truth": {
+    "divergence_step": "inventory_reserve",
+    "root_cause_category": "sequence_skip",
+    "culprit_log_ids": [
+      "c01-02"
+    ],
+    "required_evidence_ids": [
+      "c01-02",
+      "c01-03"
+    ],
+    "decoy_diagnosis": null,
+    "acceptable_root_causes": []
+  },
+  "meta": {
+    "failure_pattern": "sequence_skip",
+    "difficulty": "standard",
+    "baseline_hypothesis": "baseline",
+    "domain": "ecommerce",
+    "difficulty_factors": {
+      "log_noise": 1,
+      "causal_distance": 1,
+      "competing_hypotheses": 0,
+      "evidence_dispersion": 1,
+      "metadata_conflict": 0,
+      "temporal_ambiguity": 0
+    }
+  }
+}

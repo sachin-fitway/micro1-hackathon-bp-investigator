@@ -1,0 +1,123 @@
+{
+  "case_id": "case_11",
+  "investigation_stage": 3,
+  "diagnosis": {
+    "divergence_step": "seat_allocate",
+    "root_cause_category": "config_drift",
+    "culprit_log_ids": [
+      "c11-04",
+      "c11-05"
+    ],
+    "evidence_log_ids": [
+      "c11-01",
+      "c11-02",
+      "c11-03",
+      "c11-04",
+      "c11-05",
+      "c11-06",
+      "c11-07"
+    ],
+    "explanation": "The 'contract_signed' and 'tenant_create' steps completed successfully. However, the 'seat_allocate' step was skipped because the tenant was marked as inactive, as indicated by log 'c11-05'. This 'inactive' flag was set due to a pending billing sync (log 'c11-04'), which suggests a configuration or rule (config_drift) caused the tenant to be in a state that prevented seat allocation, despite the contract being signed and tenant created. This divergence then led to the 'welcome_email' not being triggered and the customer being unable to log in."
+  },
+  "retrieved_evidence_log_ids": [
+    "c11-01",
+    "c11-02",
+    "c11-03",
+    "c11-04",
+    "c11-05",
+    "c11-06",
+    "c11-07"
+  ],
+  "retrieved_culprit_log_ids": [
+    "c11-04",
+    "c11-05",
+    "c11-01",
+    "c11-02",
+    "c11-03",
+    "c11-06",
+    "c11-07"
+  ],
+  "unknown_log_ids": [],
+  "claim_traces": [
+    {
+      "claim": "Process diverged at step 'seat_allocate'",
+      "supporting_log_ids": [
+        "c11-04",
+        "c11-05"
+      ],
+      "source": "diagnosis"
+    },
+    {
+      "claim": "Root cause category is 'config_drift'",
+      "supporting_log_ids": [
+        "c11-01",
+        "c11-02",
+        "c11-03",
+        "c11-04",
+        "c11-05",
+        "c11-06",
+        "c11-07"
+      ],
+      "source": "diagnosis"
+    },
+    {
+      "claim": "Diagnostic explanation: The 'contract_signed' and 'tenant_create' steps completed successfully. However, the 'seat_allocate' step was skipped because the tenant was marked as inactive, as indicated by log 'c11-05'. This 'inactive' flag was set due to a pending billing sync (log 'c11-04'), which suggests a configuration or rule (config_drift) caused the tenant to be in a state that prevented seat allocation, despite the contract being signed and tenant created. This divergence then led to the 'welcome_email' not being triggered and the customer being unable to log in.",
+      "supporting_log_ids": [
+        "c11-04",
+        "c11-05"
+      ],
+      "source": "diagnosis"
+    },
+    {
+      "claim": "Culprit anchor \u2014 audit-service: Tenant marked inactive pending billing sync",
+      "supporting_log_ids": [
+        "c11-04"
+      ],
+      "source": "diagnosis"
+    },
+    {
+      "claim": "Culprit anchor \u2014 seat-service: Seat allocation skipped: tenant flag inactive",
+      "supporting_log_ids": [
+        "c11-05"
+      ],
+      "source": "diagnosis"
+    },
+    {
+      "claim": "Supporting evidence \u2014 contract-service: Contract signed",
+      "supporting_log_ids": [
+        "c11-01"
+      ],
+      "source": "diagnosis"
+    },
+    {
+      "claim": "Supporting evidence \u2014 tenant-service: Tenant created",
+      "supporting_log_ids": [
+        "c11-02"
+      ],
+      "source": "diagnosis"
+    },
+    {
+      "claim": "Supporting evidence \u2014 billing-service: Billing profile pending",
+      "supporting_log_ids": [
+        "c11-03"
+      ],
+      "source": "diagnosis"
+    },
+    {
+      "claim": "Supporting evidence \u2014 email-service: Welcome email never triggered",
+      "supporting_log_ids": [
+        "c11-06"
+      ],
+      "source": "diagnosis"
+    },
+    {
+      "claim": "Supporting evidence \u2014 support-bot: Customer cannot log in",
+      "supporting_log_ids": [
+        "c11-07"
+      ],
+      "source": "diagnosis"
+    }
+  ],
+  "evidence_table_markdown": "## Evidence Table\n\n| Log ID | Timestamp | Service | Message | Role |\n|--------|-----------|---------|---------|------|\n| c11-01 | 2026-03-12T20:00:00Z | contract-service | Contract signed | evidence |\n| c11-02 | 2026-03-12T20:00:01Z | tenant-service | Tenant created | evidence |\n| c11-03 | 2026-03-12T20:00:02Z | billing-service | Billing profile pending | evidence |\n| c11-04 | 2026-03-12T20:00:03Z | audit-service | Tenant marked inactive pending billing sync | culprit + evidence |\n| c11-05 | 2026-03-12T20:00:04Z | seat-service | Seat allocation skipped: tenant flag inactive | culprit + evidence |\n| c11-06 | 2026-03-12T20:00:05Z | email-service | Welcome email never triggered | evidence |\n| c11-07 | 2026-03-12T20:00:06Z | support-bot | Customer cannot log in | evidence |",
+  "report_path": "/Users/sachinrai/StudioProjects/micro1-hackathon-bp-investigator/reports/case_11_post_mortem.md"
+}

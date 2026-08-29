@@ -1,0 +1,178 @@
+{
+  "case_id": "case_17",
+  "process_context": {
+    "process_name": "logistics_cross_dock",
+    "expected_sequence": [
+      "inbound_scan",
+      "customs_clear",
+      "cross_dock_transfer",
+      "last_mile_dispatch"
+    ]
+  },
+  "raw_logs": [
+    {
+      "log_id": "c17-01",
+      "timestamp": "2026-04-02T10:00:00Z",
+      "service": "dock-service",
+      "message": "Inbound pallet scanned",
+      "metadata": {
+        "correlation_id": "xd-8820"
+      }
+    },
+    {
+      "log_id": "c17-02",
+      "timestamp": "2026-04-02T10:00:01Z",
+      "service": "customs-service",
+      "message": "Customs clearance recorded",
+      "metadata": {
+        "correlation_id": "xd-8820"
+      }
+    },
+    {
+      "log_id": "c17-03",
+      "timestamp": "2026-04-02T10:00:02Z",
+      "service": "transfer-service",
+      "message": "Cross-dock move initiated",
+      "metadata": {
+        "correlation_id": "xd-8820"
+      }
+    },
+    {
+      "log_id": "c17-04",
+      "timestamp": "2026-04-02T10:00:03Z",
+      "service": "audit-service",
+      "message": "No carrier handoff webhook received",
+      "metadata": {
+        "correlation_id": "xd-8820",
+        "level": "DEBUG"
+      }
+    },
+    {
+      "log_id": "c17-05",
+      "timestamp": "2026-04-02T10:00:06Z",
+      "service": "carrier-api",
+      "message": "Dispatch API timeout",
+      "metadata": {
+        "correlation_id": "xd-8820",
+        "level": "ERROR"
+      }
+    },
+    {
+      "log_id": "c17-06",
+      "timestamp": "2026-04-02T10:00:07Z",
+      "service": "support-bot",
+      "message": "Shipment stuck at hub",
+      "metadata": {
+        "correlation_id": "xd-8820"
+      }
+    },
+    {
+      "log_id": "c17-07",
+      "timestamp": "2026-04-02T10:00:04Z",
+      "service": "lastmile-service",
+      "message": "Route not created: missing handoff event",
+      "metadata": {
+        "correlation_id": "xd-8820"
+      }
+    },
+    {
+      "log_id": "c17-08",
+      "timestamp": "2026-04-02T10:00:05Z",
+      "service": "partner-hub",
+      "message": "Webhook endpoint returned 200 for health check only",
+      "metadata": {
+        "correlation_id": "xd-8820"
+      }
+    },
+    {
+      "log_id": "c17-n01",
+      "timestamp": "2026-03-12T10:00:00Z",
+      "service": "metrics-service",
+      "message": "Metric batch flushed",
+      "metadata": {
+        "correlation_id": "xd-8820",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c17-n02",
+      "timestamp": "2026-03-12T10:00:03Z",
+      "service": "cache-service",
+      "message": "Cache partition warmed",
+      "metadata": {
+        "correlation_id": "xd-8820",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c17-n03",
+      "timestamp": "2026-03-12T10:00:06Z",
+      "service": "cdn-service",
+      "message": "Edge POP health check ok",
+      "metadata": {
+        "correlation_id": "xd-8820",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c17-n04",
+      "timestamp": "2026-03-12T10:00:09Z",
+      "service": "feature-flag-service",
+      "message": "Flag evaluation cached",
+      "metadata": {
+        "correlation_id": "xd-8820",
+        "irrelevant": true
+      }
+    },
+    {
+      "log_id": "c17-n05",
+      "timestamp": "2026-03-12T10:00:12Z",
+      "service": "session-service",
+      "message": "Session TTL refreshed",
+      "metadata": {
+        "correlation_id": "xd-8820",
+        "irrelevant": true
+      }
+    }
+  ],
+  "ground_truth": {
+    "divergence_step": "cross_dock_transfer",
+    "root_cause_category": "webhook_missing",
+    "culprit_log_ids": [
+      "c17-04"
+    ],
+    "required_evidence_ids": [
+      "c17-04",
+      "c17-07",
+      "c17-03"
+    ],
+    "decoy_diagnosis": {
+      "decoy_type": "downstream_error_looks_like_root",
+      "divergence_step": "last_mile_dispatch",
+      "root_cause_category": "timeout_stall",
+      "culprit_log_ids": [
+        "c17-05"
+      ],
+      "decoy_evidence_ids": [
+        "c17-05",
+        "c17-06",
+        "c17-08"
+      ]
+    },
+    "acceptable_root_causes": []
+  },
+  "meta": {
+    "failure_pattern": "decoy_diagnosis",
+    "difficulty": "hard",
+    "baseline_hypothesis": "either",
+    "domain": "ecommerce",
+    "difficulty_factors": {
+      "log_noise": 2,
+      "causal_distance": 3,
+      "competing_hypotheses": 2,
+      "evidence_dispersion": 2,
+      "metadata_conflict": 0,
+      "temporal_ambiguity": 1
+    }
+  }
+}
