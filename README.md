@@ -52,7 +52,7 @@ flowchart LR
 
 | Control | Rule |
 |---------|------|
-| Model | Same `GEMINI_MODEL` for all stages |
+| Model | Same `OPENROUTER_MODEL` (`google/gemini-2.5-flash`) for all stages |
 | Token budget | Same `MAX_OUTPUT_TOKENS` |
 | Business inputs | `process_context` + `raw_logs` only |
 | Preprocessing | Not hidden in baseline; measured at Stage 1 |
@@ -114,7 +114,7 @@ Forensic write-ups: `results/holdout_forensic_analysis.md`, `results/step_attrib
 
 ## LLM Provider
 
-The live demo and evaluation runners call an LLM via OpenRouter (recommended) or direct Google Gemini.
+The live demo and evaluation runners use **OpenRouter** with **`google/gemini-2.5-flash`**.
 
 ### Required for the web demo
 
@@ -123,21 +123,13 @@ The live demo and evaluation runners call an LLM via OpenRouter (recommended) or
 3. **Do not commit `.env`** — it is gitignored and must stay local
 4. Start the UI: `python run_ui.py` — each investigation requires a valid key (~20–30s per case)
 
-Example `.env` (OpenRouter):
+Example `.env`:
 
 ```env
 LLM_PROVIDER=openrouter
 OPENROUTER_API_KEY=your_key
 OPENROUTER_MODEL=google/gemini-2.5-flash
 MAX_OUTPUT_TOKENS=2048
-```
-
-Optional direct Google Gemini:
-
-```env
-LLM_PROVIDER=gemini
-GEMINI_API_KEY=your_key
-GEMINI_MODEL=gemini-flash-latest
 ```
 
 ## Demo — Web UI
